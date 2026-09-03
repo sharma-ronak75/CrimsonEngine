@@ -1,0 +1,3 @@
+output=build
+source=./
+flags=-lglfw -lGL -lGLEW -Wall -Wextra -Wpedantic -std=c++23 -fsanitize=undefined
