@@ -1,10 +1,4 @@
 #include "app.h"
-#include "crimson/header/component.h"
-#include "crimson/header/material.h"
-#include "crimson/header/mesh.h"
-#include "crimson/header/system.h"
-#include "crimson/header/window.h"
-#include <glm/gtx/string_cast.hpp>
 
 void App::Initialize()
 {
@@ -27,15 +21,12 @@ void App::Initialize()
     camera_entity->get_component<Crimson::Transform>().position.z = 5;
 
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(*camera_entity);
-
-    // TODO: write macro to autogen structure and functionptr for binding the data of Mesh
-    // TODO: write the base shaders
-    // TODO: test the renderer
 }
 
 void App::Update()
 {
     world_handler.tick_preframe();
+    App::control_camera(*camera_entity);
 }
 
 void App::Render()
@@ -47,4 +38,27 @@ void App::Render()
 
 void App::Destruct()
 {
+}
+
+void App::control_camera(Crimson::Entity& camera_entity)
+{
+    if(Crimson::Input::is_key_pressed(Crimson::Key::ESCAPE)) Crimson::Window::mouse_captured = !Crimson::Window::mouse_captured;
+    if(!Crimson::Window::mouse_captured) return;
+
+    auto& transform = camera_entity.get_component<Crimson::Transform>();
+    const float sensitivity = 0.05F;
+    transform.rotation.y -= Crimson::Input::mouse_delta.x * sensitivity;
+    transform.rotation.x -= Crimson::Input::mouse_delta.y * sensitivity;
+
+    glm::vec3 movement{};
+    if(Crimson::Input::is_key_down(Crimson::Key::W)) movement += transform.get_forward() * glm::vec3(1, 0, 1);
+    if(Crimson::Input::is_key_down(Crimson::Key::S)) movement -= transform.get_forward() * glm::vec3(1, 0, 1);
+    if(Crimson::Input::is_key_down(Crimson::Key::A)) movement -= transform.get_right() * glm::vec3(1, 0, 1);
+    if(Crimson::Input::is_key_down(Crimson::Key::D)) movement += transform.get_right() * glm::vec3(1, 0, 1);
+    if(Crimson::Input::is_key_down(Crimson::Key::SPACE)) movement.y ++;
+    if(Crimson::Input::is_key_down(Crimson::Key::LEFT_SHIFT)) movement.y --;
+    if(glm::length(movement) != 0) movement = glm::normalize(movement);
+
+    const float speed = 0.25F;
+    transform.position += movement * speed;
 }

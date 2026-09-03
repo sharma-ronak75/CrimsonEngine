@@ -1,0 +1,5 @@
+* Add more primitive meshes
+* Add Lit Material
+* Make materials their own primitive e.g. Unlit Material, Lit Material etc
+* Add Enviroment Component
+# Physics

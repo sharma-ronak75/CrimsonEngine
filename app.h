@@ -14,4 +14,6 @@ struct App
     void Update();
     void Render();
     void Destruct();
+
+    void control_camera(Crimson::Entity& camera_entity);
 };
