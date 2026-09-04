@@ -1,6 +1,5 @@
 #include "../header/mesh.h"
 #include <glm/ext/quaternion_geometric.hpp>
-#include <iostream>
 #include <stdexcept>
 
 namespace Crimson
@@ -16,7 +15,6 @@ namespace Crimson
         mesh_data.erase(mesh_data.begin() + index);
         vertex_count--;
     }
-    
 
     void Mesh::add_vertices(const std::vector<Vertex>& vertices)
     {
@@ -55,11 +53,11 @@ namespace Crimson
 
         // -Z face
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
+            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
+            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1)},
             Vertex{glm::vec3( -1,  1, -1), glm::vec3(1)},
             Vertex{glm::vec3(  1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1)},
             Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)}
         });
 
@@ -75,12 +73,12 @@ namespace Crimson
 
         // -X face
         mesh->add_vertices({
-            Vertex{glm::vec3(-1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)},
+            Vertex{glm::vec3(-1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)},
             Vertex{glm::vec3(-1,  1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)}
+            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)},
+            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)}
         });
 
         // +X face
@@ -95,12 +93,12 @@ namespace Crimson
 
         // -Y face
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)},
+            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
             Vertex{glm::vec3(  1, -1,  1), glm::vec3(1)},
+            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)},
             Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)}
         });
 
         // +Y face
@@ -126,11 +124,11 @@ namespace Crimson
         for(int x = 0; x < subdivisions; x ++){
             for(int y = 0; y < subdivisions; y ++){
                 mesh->add_vertices({
-                    Vertex{glm::vec3( 0+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3( 1+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 0+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 0+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3( 0+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3( 1+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
-                    Vertex{glm::vec3( 0+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3( 1+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)}
                 });
 
@@ -146,11 +144,11 @@ namespace Crimson
 
                 // -X face
                 mesh->add_vertices({
-                    Vertex{glm::vec3(0,  0+x, 0+y) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(0,  1+x, 0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  0+x, 0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  0+x, 1+y) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(0,  0+x, 1+y) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(0,  1+x, 1+y) / (float)subdivisions, glm::vec3(1)},
-                    Vertex{glm::vec3(0,  0+x, 1+y) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(0,  1+x, 0+y) / (float)subdivisions, glm::vec3(1)}
                 });
 
@@ -166,11 +164,11 @@ namespace Crimson
 
                 // -Y face
                 mesh->add_vertices({
-                    Vertex{glm::vec3(  0+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(  0+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(  1+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(  1+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)},
-                    Vertex{glm::vec3(  1+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
                     Vertex{glm::vec3(  0+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)}
                 });
 

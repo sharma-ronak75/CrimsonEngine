@@ -6,6 +6,7 @@
 #include <glm/geometric.hpp>
 #include <glm/gtx/dual_quaternion.hpp>
 #include <glm/trigonometric.hpp>
+#include <glm/gtx/string_cast.hpp>
 #include "../header/window.h"
 
 namespace Crimson

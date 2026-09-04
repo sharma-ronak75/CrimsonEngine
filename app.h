@@ -8,7 +8,8 @@ struct App
     float deltaTime = 0;    // Time elapsed since last frame
     Crimson::WorldHandler world_handler;
     Crimson::Entity* camera_entity;
-    Crimson::Entity* entity;
+    Crimson::Entity* entity1;
+    Crimson::Entity* entity2;
 
     void Initialize();
     void Update();

@@ -19,7 +19,7 @@ namespace Crimson
     public:
         glm::vec3 position{};
         glm::vec3 rotation{};
-        glm::vec3 scale{};
+        glm::vec3 scale{1.0};
 
         Transform() = default;
         Transform(glm::vec3 position, glm::vec3 rotation, glm::vec3 scale): position(position), rotation(rotation), scale(scale) {}
