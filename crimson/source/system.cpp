@@ -32,8 +32,9 @@ namespace Crimson
         {
             if(mesh_entity == nullptr) throw std::logic_error("fatal: entity found to be nullptr");
             auto& mesh_renderer = mesh_entity->get_component<MeshRenderer>();
-            const Material& material = mesh_renderer.material;
-            const Mesh* mesh = mesh_renderer.mesh;
+            auto& material = mesh_renderer.material;
+            auto* mesh = mesh_renderer.mesh;
+            auto& transform = mesh_entity->get_component<Transform>();
 
             if(mesh == nullptr) continue;
 
@@ -44,6 +45,9 @@ namespace Crimson
             material.set_shader_attribute("ucamright", camera_entity->get_component<Transform>().get_right());
             material.set_shader_attribute("ucamup", camera_entity->get_component<Transform>().get_up());
             material.set_shader_attribute("utime", Crimson::Window::get_ticked_time());
+            material.set_shader_attribute("umeshpos", transform.position);
+            material.set_shader_attribute("umeshrot", transform.rotation);
+            material.set_shader_attribute("umeshscale", transform.scale);
             
             material.shader.use();
             glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());

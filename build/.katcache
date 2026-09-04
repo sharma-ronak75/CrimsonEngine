@@ -1,4 +1,4 @@
-./app.cpp=2777112806663568240
+./app.cpp=9906832083576277567
 ./main.cpp=9041421153842772267
 ./crimson/source/component.cpp=2283190026652460348
 ./crimson/source/rawshader.cpp=6857607117857292995
@@ -8,6 +8,6 @@
 ./crimson/source/file.cpp=11698325991524737982
 ./crimson/source/world_handler.cpp=17243987971825144565
 ./crimson/source/material.cpp=17921988112275963323
-./crimson/source/mesh.cpp=4822578232759409674
-./crimson/source/system.cpp=15249357821395927892
+./crimson/source/mesh.cpp=15753817115621948091
+./crimson/source/system.cpp=94289483246979437
 ./crimson/source/window.cpp=9799788028211547808

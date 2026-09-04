@@ -1,4 +1,5 @@
 #include "../header/mesh.h"
+#include <glm/ext/quaternion_geometric.hpp>
 #include <iostream>
 #include <stdexcept>
 
@@ -122,72 +123,75 @@ namespace Crimson
         Mesh* mesh = new Mesh();
         if(mesh == nullptr) throw std::runtime_error("memory allocation failed");
         
-        subdivisions = 2;
-        // -Z face
         for(int x = 0; x < subdivisions; x ++){
             for(int y = 0; y < subdivisions; y ++){
                 mesh->add_vertices({
-                    Vertex{glm::vec3( -1 + x, -1 + y, -1), glm::vec3(1)},
-                    Vertex{glm::vec3(  1 + x, -1 + y, -1), glm::vec3(1)},
-                    Vertex{glm::vec3( -1 + x,  1 + y, -1), glm::vec3(1)},
-                    Vertex{glm::vec3(  1 + x,  1 + y, -1), glm::vec3(1)},
-                    Vertex{glm::vec3( -1 + x,  1 + y, -1), glm::vec3(1)},
-                    Vertex{glm::vec3(  1 + x, -1 + y, -1), glm::vec3(1)}
+                    Vertex{glm::vec3( 0+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 1+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 0+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 1+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 0+x, 1+y, 0) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( 1+x, 0+y, 0) / (float)subdivisions, glm::vec3(1)}
                 });
+
+                // +Z face
+                mesh->add_vertices({
+                    Vertex{glm::vec3(  0+x,  0+y, subdivisions) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+x,  0+y, subdivisions) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+x,  1+y, subdivisions) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+x,  1+y, subdivisions) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+x,  1+y, subdivisions) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+x,  0+y, subdivisions) / (float)subdivisions, glm::vec3(1)}
+                });
+
+                // -X face
+                mesh->add_vertices({
+                    Vertex{glm::vec3(0,  0+x, 0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  1+x, 0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  0+x, 1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  1+x, 1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  0+x, 1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(0,  1+x, 0+y) / (float)subdivisions, glm::vec3(1)}
+                });
+
+                // +X face
+                mesh->add_vertices({
+                    Vertex{glm::vec3( subdivisions,  0+x,  0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( subdivisions,  1+x,  0+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( subdivisions,  0+x,  1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( subdivisions,  1+x,  1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( subdivisions,  0+x,  1+y) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3( subdivisions,  1+x,  0+y) / (float)subdivisions, glm::vec3(1)}
+                });
+
+                // -Y face
+                mesh->add_vertices({
+                    Vertex{glm::vec3(  0+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, 0, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+y, 0, 1+x) / (float)subdivisions, glm::vec3(1)}
+                });
+
+                // +Y face
+                mesh->add_vertices({
+                    Vertex{glm::vec3(  0+y, subdivisions, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+y, subdivisions, 1+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, subdivisions, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, subdivisions, 1+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  1+y, subdivisions, 0+x) / (float)subdivisions, glm::vec3(1)},
+                    Vertex{glm::vec3(  0+y, subdivisions, 1+x) / (float)subdivisions, glm::vec3(1)}
+                });
+
             }
-        };
+        }
 
-        return mesh;
-
-        // +Z face
-        mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1)}
-        });
-
-        // -X face
-        mesh->add_vertices({
-            Vertex{glm::vec3(-1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)}
-        });
-
-        // +X face
-        mesh->add_vertices({
-            Vertex{glm::vec3( +1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1)}
-        });
-
-        // -Y face
-        mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)}
-        });
-
-        // +Y face
-        mesh->add_vertices({
-            Vertex{glm::vec3( -1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1)}
-        });
+        // normalizing vecs
+        for(auto& vertex: mesh->mesh_data)
+        {
+            vertex.position = glm::normalize(vertex.position * 2.0F - 1.0F);
+        }
 
         return mesh;
     }
