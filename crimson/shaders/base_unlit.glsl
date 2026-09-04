@@ -17,7 +17,7 @@ out vec3 ftint;
 void main()
 {
     ftint = tint;
-    gl_Position = umvp * vec4(position.xy * 0.5, 0, 1);
+    gl_Position = umvp * vec4(position, 1);
 }
 
 #fragment
@@ -30,5 +30,5 @@ in vec3 ftint;
 void main()
 {
     // frag_color = vec4(abs(vec3(sin(utime), cos(utime), sin(utime))), 1);
-    frag_color = vec4(ftint, 1);
+    frag_color = vec4(ftint * float((gl_PrimitiveID % 5) + 1) / 6.0, 1);
 }

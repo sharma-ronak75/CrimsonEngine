@@ -9,7 +9,7 @@ void App::Initialize()
     entity->add_component<Crimson::Transform>();
     entity->add_component<Crimson::MeshRenderer>();
     auto& mesh_renderer = entity->Crimson::Entity::get_component<Crimson::MeshRenderer>();
-    mesh_renderer.mesh = Crimson::Primitive::create_plane();
+    mesh_renderer.mesh = Crimson::Primitive::create_sphere(2);
     mesh_renderer.material = Crimson::Material(Crimson::RawShader::load("crimson/shaders/base_unlit.glsl"));
 
     world_handler.add_system<Crimson::RenderSystem>();

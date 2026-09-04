@@ -46,7 +46,7 @@ namespace Crimson
             material.set_shader_attribute("utime", Crimson::Window::get_ticked_time());
             
             material.shader.use();
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            glDrawArrays(GL_TRIANGLES, 0, mesh->get_vertex_count());
         }
     }
 

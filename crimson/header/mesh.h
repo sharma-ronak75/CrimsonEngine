@@ -30,6 +30,8 @@ namespace Crimson
     namespace Primitive
     {
         Mesh* create_plane();
+        Mesh* create_cube();
+        Mesh* create_sphere(int subdivisions = 1);
     }
 }
 /*
