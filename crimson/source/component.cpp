@@ -83,8 +83,8 @@ namespace Crimson
         glGenBuffers(1, &vbo);
     }
     
-    MeshRenderer::MeshRenderer(Mesh& mesh, Material material):
-        mesh(&mesh), material(material)
+    MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> mesh, Material material):
+        mesh(mesh), material(std::move(material))
     {
         glGenBuffers(1, &vbo);
     }

@@ -1,14 +1,15 @@
 #include "../header/rawshader.h"
 #include "../header/file.h"
+#include <stdexcept>
 
 namespace Crimson{
 void RawShader::use() const
 {
-	if(program == 0)
+	if(program == nullptr)
 	{
 		printf("Shader::use() -> warning! shader not initialized.\n");
 	}
-	glUseProgram(program);
+	glUseProgram(get_program_id());
 }
 
 void RawShader::use_none()
@@ -57,8 +58,20 @@ RawShader RawShader::load(fs::path location)
 		line.clear();
 	}
 
-	vertex = "#version 430 core\n" + load_shader_recursive(vertex, location);
-	fragment = "#version 430 core\n" + load_shader_recursive(fragment, location);
+	if(!line.empty())
+	{
+		if(type == 1)
+		{
+			vertex += line + '\n';
+		}
+		else if(type == 2)
+		{
+			fragment += line + '\n';
+		}
+	}
+
+	vertex = "#version 420 core\n" + load_shader_recursive(vertex, location);
+	fragment = "#version 420 core\n" + load_shader_recursive(fragment, location);
 	
 	return load_from_raw_sources(vertex, fragment);
 }
@@ -66,13 +79,44 @@ RawShader RawShader::load(fs::path location)
 RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std::string& fragment)
 {
 	unsigned int vertex_shader = compile_shader(GL_VERTEX_SHADER, vertex.c_str());
-	unsigned int fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragment.c_str());
+	unsigned int fragment_shader = 0;
+	try
+	{
+		fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragment.c_str());
+	}
+	catch(...)
+	{
+		glDeleteShader(vertex_shader);
+		throw;
+	}
 
 	RawShader shader;
-	shader.program = glCreateProgram();
-	glAttachShader(shader.program, vertex_shader);
-	glAttachShader(shader.program, fragment_shader);
-	glLinkProgram(shader.program);
+	shader.program = std::shared_ptr<unsigned int>(new unsigned int(glCreateProgram()), [](unsigned int* program)
+	{
+		if(program != nullptr)
+		{
+			glDeleteProgram(*program);
+			delete program;
+		}
+	});
+	glAttachShader(shader.get_program_id(), vertex_shader);
+	glAttachShader(shader.get_program_id(), fragment_shader);
+	glLinkProgram(shader.get_program_id());
+
+	GLint linked;
+	glGetProgramiv(shader.get_program_id(), GL_LINK_STATUS, &linked);
+	if(!linked)
+	{
+		GLint infoLen;
+		glGetProgramiv(shader.get_program_id(), GL_INFO_LOG_LENGTH, &infoLen);
+		std::string infoLog(infoLen > 0 ? infoLen : 1, '\0');
+		if(infoLen > 0) glGetProgramInfoLog(shader.get_program_id(), infoLen, NULL, infoLog.data());
+		glDeleteShader(vertex_shader);
+		glDeleteShader(fragment_shader);
+		glDeleteProgram(shader.get_program_id());
+		shader.program.reset();
+		throw std::runtime_error("Failed to link shader program.\n" + infoLog);
+	}
 	
 	glDeleteShader(vertex_shader);
 	glDeleteShader(fragment_shader);
@@ -82,7 +126,7 @@ RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std:
 
 std::string RawShader::load_shader_recursive(const std::string& presource, fs::path location)
 {
-	std::string folder_path = location.parent_path();
+	fs::path folder_path = location.parent_path();
 
 	std::string line;
 	std::string new_source;
@@ -96,13 +140,25 @@ std::string RawShader::load_shader_recursive(const std::string& presource, fs::p
 
 		if(line.rfind("#include ", 0) == 0)
 		{
-			new_source += load_shader_recursive(File::read(folder_path + line.substr(9)), location.string()) + '\n';
+			new_source += load_shader_recursive(File::read(folder_path.string() + line.substr(9)), location.string()) + '\n';
 			line.clear();
 			continue;
 		}
 
 		new_source += line + '\n';
 		line.clear();
+	}
+
+	if(!line.empty())
+	{
+		if(line.rfind("#include ", 0) == 0)
+		{
+			new_source += load_shader_recursive(File::read(folder_path.string() + line.substr(9)), location.string()) + '\n';
+		}
+		else
+		{
+			new_source += line + '\n';
+		}
 	}
 
 	return new_source;
@@ -121,23 +177,22 @@ unsigned int RawShader::compile_shader(unsigned int shader_type, const char* sha
 	{
 		GLint infoLen;
 		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-		if(infoLen > 0)
-		{
-			char* infoLog = (char*) malloc(infoLen);
-			glGetShaderInfoLog(shader, infoLen, NULL, infoLog);
-			printf("Failed to compile shader.\n");
-			printf("%s\n", infoLog);
-			exit(1);
-		}
+		std::vector<char> infoLog(infoLen > 0 ? infoLen : 1);
+		glGetShaderInfoLog(shader, infoLen, NULL, infoLog.data());
+		printf("Failed to compile shader.\n");
+		printf("%s\n", infoLog.data());
+		glDeleteShader(shader);
+		throw std::runtime_error("Failed to compile shader");
 	}
 
 	return shader;
 }
 
-unsigned int RawShader::get_uniform_location(const char* name) const
+int RawShader::get_uniform_location(const char* name) const
 {
-	unsigned int uniform = glGetUniformLocation(program, name);
-	// if(uniform == (unsigned int)-1)
+	if(program == nullptr) return -1;
+	int uniform = glGetUniformLocation(get_program_id(), name);
+	// if(uniform == -1)
 	// {
 	// 	printf("Uniform \"%s\" does not exist or is unused.\n", name);
 	// 	exit(1);

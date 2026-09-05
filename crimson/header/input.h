@@ -65,7 +65,7 @@ namespace Crimson
         F5 = GLFW_KEY_F5,
         F6 = GLFW_KEY_F6,
         F7 = GLFW_KEY_F7,
-        F8 = GLFW_KEY_F7,
+        F8 = GLFW_KEY_F8,
         F9 = GLFW_KEY_F9,
         F10 = GLFW_KEY_F10,
         F11 = GLFW_KEY_F11,
@@ -151,6 +151,7 @@ namespace Crimson
 
 namespace Crimson::Input
 {
+    // Non-owning reference to the GLFW window managed by the application.
     extern GLFWwindow* window;
     extern bool mouse_down;
     extern glm::ivec2 mouse_position;

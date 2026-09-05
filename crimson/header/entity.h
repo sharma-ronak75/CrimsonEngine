@@ -3,12 +3,13 @@
 #include "component.h"
 #include <stdexcept>
 #include <unordered_map>
+#include <memory>
 namespace Crimson
 {
     class Entity
     {
     private:
-        std::unordered_map<std::string, Component*> components;
+        std::unordered_map<std::string, std::unique_ptr<Component>> components;
     public:
 
         Entity() = default;
@@ -18,7 +19,7 @@ namespace Crimson
         template<typename C> C& get_component();
         template<typename C> bool has_component();
 
-        const std::unordered_map<std::string, Component*>& get_component_list() const;
+        const std::unordered_map<std::string, std::unique_ptr<Component>>& get_component_list() const;
     };
 
     template<typename C> void Entity::add_component()
@@ -28,7 +29,7 @@ namespace Crimson
             if(C().type() == N) throw std::invalid_argument("another component with the same type already exists");
         }
 
-        components.emplace(C().type(), new C());
+        components.emplace(C().type(), std::make_unique<C>());
     }
 
     template<typename C> void Entity::remove_component()
@@ -36,7 +37,7 @@ namespace Crimson
         for(auto& [N, component]: components)
         {
             if(C().type() != N) continue;
-            components.erase(C().type());
+            components.erase(N);
             return;
         }
 
@@ -48,7 +49,7 @@ namespace Crimson
         for(auto& [N, component]: components)
         {
             if(C().type() != N) continue;
-            return *(C*)component;
+            return static_cast<C&>(*component);
         }
 
         throw std::runtime_error(std::format("cannot find component {}, it doesn't exist", C().type()));
@@ -65,7 +66,7 @@ namespace Crimson
         return false;
     }
 
-    inline const std::unordered_map<std::string, Component*>& Entity::get_component_list() const
+    inline const std::unordered_map<std::string, std::unique_ptr<Component>>& Entity::get_component_list() const
     {
         return components;
     }

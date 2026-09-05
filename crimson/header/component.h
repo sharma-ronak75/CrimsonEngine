@@ -2,6 +2,7 @@
 #include <glm/ext/matrix_float3x3.hpp>
 #include <glm/ext/vector_float3.hpp>
 #include "mesh.h"
+#include <memory>
 #include "material.h"
 
 namespace Crimson
@@ -12,6 +13,7 @@ namespace Crimson
         Component() = default;
 
         virtual std::string type() const noexcept { return "Base"; }
+        virtual ~Component() = default;
     };
 
     class Transform: public Component
@@ -41,7 +43,7 @@ namespace Crimson
         glm::vec3 world_up{};
 
         Camera() = default;
-        Camera(float fov, float near_plane, float far_plane, glm::vec3 world_up): fov(fov), near_plane(near_plane), far_plane(far_plane) {}
+        Camera(float fov, float near_plane, float far_plane, glm::vec3 world_up): fov(fov), near_plane(near_plane), far_plane(far_plane), world_up(world_up) {}
         virtual std::string type() const noexcept override { return "Camera"; }
 
 
@@ -51,12 +53,12 @@ namespace Crimson
     class MeshRenderer: public Component
     {
     public:
-        Mesh* mesh = nullptr;
+        std::shared_ptr<Mesh> mesh = nullptr;
         Material material{};
         GLuint vbo{};
 
         MeshRenderer();
-        MeshRenderer(Mesh& mesh, Material material);
+        MeshRenderer(std::shared_ptr<Mesh> mesh, Material material);
         ~MeshRenderer();
 
         void bind() const;

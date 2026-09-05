@@ -46,7 +46,7 @@ void listen()
 bool is_key_down(Key key)
 {
     assert(window != nullptr);
-    assert((int)key < InputKeyCount);
+    assert((int)key >= 0 && (int)key < InputKeyCount);
 
     return keys[(int)key];
 }
@@ -54,7 +54,7 @@ bool is_key_down(Key key)
 bool is_key_pressed(Key key)
 {
     assert(window != nullptr);
-    assert((int)key < InputKeyCount);
+    assert((int)key >= 0 && (int)key < InputKeyCount);
 
     return keys[(int)key] == true && prevKeys[(int)key] == false;
 }
@@ -62,7 +62,7 @@ bool is_key_pressed(Key key)
 bool is_key_released(Key key)
 {
     assert(window != nullptr);
-    assert((int)key < InputKeyCount);
+    assert((int)key >= 0 && (int)key < InputKeyCount);
 
     return keys[(int)key] == false && prevKeys[(int)key] == true;
 }
@@ -70,7 +70,7 @@ bool is_key_released(Key key)
 bool is_mouse_down(MouseButton button)
 {
     assert(window != nullptr);
-    assert((int)button < InputButtonCount);
+    assert((int)button >= 0 && (int)button < InputButtonCount);
 
     return buttons[(int)button];
 }
@@ -78,7 +78,7 @@ bool is_mouse_down(MouseButton button)
 bool is_mouse_pressed(MouseButton button)
 {
     assert(window != nullptr);
-    assert((int)button < InputButtonCount);
+    assert((int)button >= 0 && (int)button < InputButtonCount);
 
     return buttons[(int)button] == true && prevButtons[(int)button] == false;
 }
@@ -86,7 +86,7 @@ bool is_mouse_pressed(MouseButton button)
 bool is_mouse_released(MouseButton button)
 {
     assert(window != nullptr);
-    assert((int)button < InputButtonCount);
+    assert((int)button >= 0 && (int)button < InputButtonCount);
 
     return buttons[(int)button] == false && prevButtons[(int)button] == true;
 }

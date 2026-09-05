@@ -6,34 +6,33 @@
 namespace Crimson
 {
     void RenderSystem::initialize() const {};
-    void RenderSystem::tick_preframe(std::vector<Entity*>& entities) const {};
+    void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) const {};
 
-    void RenderSystem::tick_postframe(std::vector<Entity*>& entities) const
+    void RenderSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) const
     {
-        std::vector<Entity*> mesh_entities;
-        Entity* camera_entity = nullptr;
-        for(auto entity: entities)
+        std::vector<std::shared_ptr<Entity>> mesh_entities;
+        auto camera_entity = active_camera.lock();
+        for(auto& entity: entities)
         {
-            if(entity == nullptr) throw std::invalid_argument("entity was fond to be nullptr");
+            if(entity == nullptr) throw std::invalid_argument("entity was found to be nullptr");
             if(
                 entity->has_component<Transform>() &&
                 entity->has_component<MeshRenderer>()
             )   mesh_entities.emplace_back(entity);
 
-            if(entity != active_camera) continue;
+            if(entity != camera_entity) continue;
             if(!entity->has_component<Camera>()) throw std::runtime_error("active camera entity had its Camera component detached");
-            camera_entity = entity;
         }
 
         if(camera_entity == nullptr) return;
         glm::mat4 PV = camera_entity->get_component<Camera>().get_projection_matrix() * camera_entity->get_component<Transform>().get_view_matrix();
 
-        for(auto mesh_entity: mesh_entities)
+        for(auto& mesh_entity: mesh_entities)
         {
             if(mesh_entity == nullptr) throw std::logic_error("fatal: entity found to be nullptr");
             auto& mesh_renderer = mesh_entity->get_component<MeshRenderer>();
             auto& material = mesh_renderer.material;
-            auto* mesh = mesh_renderer.mesh;
+            auto mesh = mesh_renderer.mesh;
             auto& transform = mesh_entity->get_component<Transform>();
 
             if(mesh == nullptr) continue;
@@ -54,10 +53,10 @@ namespace Crimson
         }
     }
 
-    void RenderSystem::set_active_camera(Entity& entity)
+    void RenderSystem::set_active_camera(const std::shared_ptr<Entity>& entity)
     {
-        if(!entity.has_component<Camera>()) throw std::invalid_argument("Cannot set entity as active camera, it doesn't have the Camera component");
+        if(entity == nullptr || !entity->has_component<Camera>()) throw std::invalid_argument("Cannot set entity as active camera, it doesn't have the Camera component");
 
-        active_camera = &entity;
+        active_camera = entity;
     }
 }

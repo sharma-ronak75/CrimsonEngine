@@ -3,6 +3,10 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include <memory>
+#include <format>
+#include <utility>
+#include <cstddef>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 

@@ -42,7 +42,6 @@ void draw_rectangle(glm::vec2 centre, glm::vec2 scale, glm::vec4 color, float ro
     DefaultShaders::rectangle.set_uniform("ucolor", color);
     DefaultShaders::rectangle.set_uniform("urotation", rotation);
     DefaultShaders::rectangle.set_uniform("uaspect_scale", get_aspect_scale());
-    DefaultShaders::rectangle.set_uniform("uaspect_scale", get_aspect_scale());
     DefaultShaders::rectangle.set_uniform("ucamera_position", _active_camera.position);
     DefaultShaders::rectangle.set_uniform("ucamera_zoom", _active_camera.zoom);
 

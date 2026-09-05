@@ -5,13 +5,14 @@
 #include <glm/ext/vector_float4.hpp>
 #include <initializer_list>
 #include <vector>
+#include <memory>
 #include "vertex.h"
 namespace Crimson
 {
     class Mesh
     {
     private:
-    size_t vertex_count{};
+        size_t vertex_count{};
     public:
         std::vector<Vertex> mesh_data;
 
@@ -24,14 +25,14 @@ namespace Crimson
         void add_vertices(const std::vector<Vertex>& vertices);
         void add_vertices(const std::initializer_list<Vertex> vertices);
 
-        size_t get_vertex_count() const noexcept { return vertex_count; }
+        size_t get_vertex_count() const noexcept { return mesh_data.size(); }
     };
 
     namespace Primitive
     {
-        Mesh* create_plane();
-        Mesh* create_cube();
-        Mesh* create_sphere(int subdivisions = 1);
+        std::shared_ptr<Mesh> create_plane();
+        std::shared_ptr<Mesh> create_cube();
+        std::shared_ptr<Mesh> create_sphere(int subdivisions = 1);
     }
 }
 /*

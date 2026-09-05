@@ -30,10 +30,10 @@ namespace Crimson
         vertex_count += vertices.size();
     }
 
-    Mesh* Primitive::create_plane()
+    std::shared_ptr<Mesh> Primitive::create_plane()
     {
-        Mesh* mesh = new Mesh();
-        if(mesh == nullptr) throw std::runtime_error("memory allocation failed");
+        auto mesh = std::make_shared<Mesh>();
+        
         
         mesh->add_vertices({
             Vertex{glm::vec3( -1, -1, 0), glm::vec3(1)},
@@ -46,10 +46,10 @@ namespace Crimson
         return mesh;
     }
 
-    Mesh* Primitive::create_cube()
+    std::shared_ptr<Mesh> Primitive::create_cube()
     {
-        Mesh* mesh = new Mesh();
-        if(mesh == nullptr) throw std::runtime_error("memory allocation failed");
+        auto mesh = std::make_shared<Mesh>();
+        
 
         // -Z face
         mesh->add_vertices({
@@ -114,12 +114,12 @@ namespace Crimson
         return mesh;
     }
 
-    Mesh* Primitive::create_sphere(int subdivisions)
+    std::shared_ptr<Mesh> Primitive::create_sphere(int subdivisions)
     {
         if(subdivisions < 1) throw std::invalid_argument("subdivisions must be >= 1");
 
-        Mesh* mesh = new Mesh();
-        if(mesh == nullptr) throw std::runtime_error("memory allocation failed");
+        auto mesh = std::make_shared<Mesh>();
+        
         
         for(int x = 0; x < subdivisions; x ++){
             for(int y = 0; y < subdivisions; y ++){
