@@ -1,6 +1,0 @@
-* [DONE] Add more primitive meshes
-* [DONE] Send mesh coords as uniform
-* Add Lit Material
-* Make materials their own primitive e.g. Unlit Material, Lit Material etc
-* Add Enviroment Component
-# Physics
