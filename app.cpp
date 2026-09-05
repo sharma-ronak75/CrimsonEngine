@@ -1,4 +1,5 @@
 #include "app.h"
+#include "crimson/header/component.h"
 #include "crimson/header/settings.h"
 
 void App::Initialize()
@@ -42,7 +43,11 @@ void App::Update()
     if(camera_entity != nullptr) control(*camera_entity);
     world_handler.tick_preframe();
 
+    std::cout<<entity1->get_component<Crimson::MeshRenderer>().material.shader.program<<' ' 
+                <<entity2->get_component<Crimson::MeshRenderer>().material.shader.program<<'\n';
+
     if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
+    if(Crimson::Input::is_key_pressed(Crimson::Key::R)) entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();
     if(!animation_pause)
     {
         entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;

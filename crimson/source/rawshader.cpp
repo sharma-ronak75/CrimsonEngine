@@ -1,5 +1,6 @@
 #include "../header/rawshader.h"
 #include "../header/file.h"
+#include <functional>
 #include <stdexcept>
 
 namespace Crimson{
@@ -73,7 +74,9 @@ RawShader RawShader::load(fs::path location)
 	vertex = "#version 420 core\n" + load_shader_recursive(vertex, location);
 	fragment = "#version 420 core\n" + load_shader_recursive(fragment, location);
 	
-	return load_from_raw_sources(vertex, fragment);
+	auto shader = load_from_raw_sources(vertex, fragment);
+	shader.shader_path = location;
+	return shader;
 }
 
 RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std::string& fragment)
@@ -91,11 +94,11 @@ RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std:
 	}
 
 	RawShader shader;
-	shader.program = std::shared_ptr<unsigned int>(new unsigned int(glCreateProgram()), [](unsigned int* program)
+	shader.program = std::shared_ptr<ProgramID>(new ProgramID{glCreateProgram()}, [](ProgramID* program)
 	{
 		if(program != nullptr)
 		{
-			glDeleteProgram(*program);
+			glDeleteProgram(program->id);
 			delete program;
 		}
 	});
@@ -249,6 +252,17 @@ void RawShader::set_uniform(const char* name, glm::mat4 value) const
 template <typename T> void RawShader::uniform(const char* name, T value) const
 {
 	set_uniform(name, value);
+}
+
+void RawShader::recompile()
+{
+	if(program == nullptr) return;
+	if(shader_path.empty()) throw std::bad_function_call();
+	auto new_shader = load(shader_path);
+
+	if (program->id != 0) glDeleteProgram(program->id);
+    program->id = new_shader.program->id;
+    new_shader.program->id = 0;
 }
 
 } // namespace Crimson
