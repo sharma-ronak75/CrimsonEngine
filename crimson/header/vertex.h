@@ -7,5 +7,6 @@ namespace Crimson
     {
         glm::vec3 position;
         glm::vec3 tint;
+        glm::vec3 normal;
     };
 }

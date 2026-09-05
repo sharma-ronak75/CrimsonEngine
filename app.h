@@ -9,14 +9,16 @@ struct App
     int tick = 0;           // Number of frames passed since creation of the window
     float deltaTime = 0;    // Time elapsed since last frame
     Crimson::WorldHandler world_handler;
+    
     std::shared_ptr<Crimson::Entity> camera_entity;
     std::shared_ptr<Crimson::Entity> entity1;
     std::shared_ptr<Crimson::Entity> entity2;
+    bool animation_pause = true;
 
     void Initialize();
     void Update();
     void Render();
     void Destruct();
 
-    void control_camera(Crimson::Entity& camera_entity);
+    void control(Crimson::Entity& camera_entity);
 };

@@ -36,12 +36,12 @@ namespace Crimson
         
         
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, 0), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, 0), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, 0), glm::vec3(1)},
-            Vertex{glm::vec3(  1,  1, 0), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, 0), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, 0), glm::vec3(1)}
+            Vertex{glm::vec3( -1, -1, 0), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1, -1, 0), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3( -1,  1, 0), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1,  1, 0), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3( -1,  1, 0), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1, -1, 0), glm::vec3(1), glm::vec3(0, 0, 1)}
         });
         return mesh;
     }
@@ -50,65 +50,64 @@ namespace Crimson
     {
         auto mesh = std::make_shared<Mesh>();
         
-
         // -Z face
         mesh->add_vertices({
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)}
+            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1), glm::vec3(0, 0, -1)},
+            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1), glm::vec3(0, 0, -1)},
+            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1), glm::vec3(0, 0, -1)},
+            Vertex{glm::vec3( -1,  1, -1), glm::vec3(1), glm::vec3(0, 0, -1)},
+            Vertex{glm::vec3(  1,  1, -1), glm::vec3(1), glm::vec3(0, 0, -1)},
+            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1), glm::vec3(0, 0, -1)}
         });
 
         // +Z face
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1)}
+            Vertex{glm::vec3( -1, -1, +1), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1,  1, +1), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3( -1,  1, +1), glm::vec3(1), glm::vec3(0, 0, 1)},
+            Vertex{glm::vec3(  1, -1, +1), glm::vec3(1), glm::vec3(0, 0, 1)}
         });
 
         // -X face
         mesh->add_vertices({
-            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1)}
+            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1), glm::vec3(-1, 0, 0)},
+            Vertex{glm::vec3(-1, -1, -1), glm::vec3(1), glm::vec3(-1, 0, 0)},
+            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1), glm::vec3(-1, 0, 0)},
+            Vertex{glm::vec3(-1,  1,  1), glm::vec3(1), glm::vec3(-1, 0, 0)},
+            Vertex{glm::vec3(-1,  1, -1), glm::vec3(1), glm::vec3(-1, 0, 0)},
+            Vertex{glm::vec3(-1, -1,  1), glm::vec3(1), glm::vec3(-1, 0, 0)}
         });
 
         // +X face
         mesh->add_vertices({
-            Vertex{glm::vec3( +1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1)}
+            Vertex{glm::vec3( +1, -1, -1), glm::vec3(1), glm::vec3(1, 0, 0)},
+            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1), glm::vec3(1, 0, 0)},
+            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1), glm::vec3(1, 0, 0)},
+            Vertex{glm::vec3( +1,  1,  1), glm::vec3(1), glm::vec3(1, 0, 0)},
+            Vertex{glm::vec3( +1, -1,  1), glm::vec3(1), glm::vec3(1, 0, 0)},
+            Vertex{glm::vec3( +1,  1, -1), glm::vec3(1), glm::vec3(1, 0, 0)}
         });
 
         // -Y face
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1)},
+            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1), glm::vec3(0, -1, 0)},
+            Vertex{glm::vec3( -1, -1, -1), glm::vec3(1), glm::vec3(0, -1, 0)},
+            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1), glm::vec3(0, -1, 0)},
+            Vertex{glm::vec3(  1, -1,  1), glm::vec3(1), glm::vec3(0, -1, 0)},
+            Vertex{glm::vec3( -1, -1,  1), glm::vec3(1), glm::vec3(0, -1, 0)},
+            Vertex{glm::vec3(  1, -1, -1), glm::vec3(1), glm::vec3(0, -1, 0)},
         });
 
         // +Y face
         mesh->add_vertices({
-            Vertex{glm::vec3( -1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1,  1), glm::vec3(1)},
-            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1)},
-            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1)}
+            Vertex{glm::vec3( -1, +1, -1), glm::vec3(1), glm::vec3(0, 1, 0)},
+            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1), glm::vec3(0, 1, 0)},
+            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1), glm::vec3(0, 1, 0)},
+            Vertex{glm::vec3(  1, +1,  1), glm::vec3(1), glm::vec3(0, 1, 0)},
+            Vertex{glm::vec3(  1, +1, -1), glm::vec3(1), glm::vec3(0, 1, 0)},
+            Vertex{glm::vec3( -1, +1,  1), glm::vec3(1), glm::vec3(0, 1, 0)}
         });
 
         return mesh;
@@ -189,6 +188,7 @@ namespace Crimson
         for(auto& vertex: mesh->mesh_data)
         {
             vertex.position = glm::normalize(vertex.position * 2.0F - 1.0F);
+            vertex.normal = vertex.position;
         }
 
         return mesh;

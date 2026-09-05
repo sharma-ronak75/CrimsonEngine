@@ -1,4 +1,5 @@
 #include "app.h"
+#include "crimson/header/settings.h"
 
 void App::Initialize()
 {
@@ -16,10 +17,10 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_plane();
+    auto mesh1 = Crimson::Primitive::create_cube();
     auto mesh2 = Crimson::Primitive::create_sphere(10);
     Crimson::Material material;
-    material.shader = Crimson::RawShader::load("crimson/shaders/base_unlit.glsl");
+    material.shader = Crimson::RawShader::load("crimson/shaders/base_lit.glsl");
 
     entity1 = world_handler.add_entity();
     entity1->add_component<Crimson::Transform>();
@@ -38,18 +39,22 @@ void App::Initialize()
 
 void App::Update()
 {
-    if(camera_entity != nullptr) control_camera(*camera_entity);
+    if(camera_entity != nullptr) control(*camera_entity);
     world_handler.tick_preframe();
-    entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
-    entity1->get_component<Crimson::Transform>().rotation.x += 1.5;
-    entity1->get_component<Crimson::Transform>().rotation.z += 3.5;
 
-    entity2->get_component<Crimson::Transform>().position.y = sinf(Crimson::Window::get_ticked_time() * 0.75) * 8.5;
-    entity2->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
-    entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
-    entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
-    entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
+    if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
+    if(!animation_pause)
+    {
+        entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
+        entity1->get_component<Crimson::Transform>().rotation.x += 1.5;
+        entity1->get_component<Crimson::Transform>().rotation.z += 3.5;
 
+        entity2->get_component<Crimson::Transform>().position.y = sinf(Crimson::Window::get_ticked_time() * 0.75) * 8.5;
+        entity2->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
+        entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
+        entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
+        entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
+    }
 }
 
 void App::Render()
@@ -60,8 +65,10 @@ void App::Render()
 
 void App::Destruct() {}
 
-void App::control_camera(Crimson::Entity& camera_entity)
-{    if(Crimson::Input::is_key_pressed(Crimson::Key::ESCAPE)) Crimson::Window::mouse_captured = !Crimson::Window::mouse_captured;
+void App::control(Crimson::Entity& camera_entity)
+{
+    if(Crimson::Input::is_key_pressed(Crimson::Key::ESCAPE)) Crimson::Window::mouse_captured = !Crimson::Window::mouse_captured;
+    if(Crimson::Input::is_key_pressed(Crimson::Key::RIGHT_SHIFT)) Crimson::Settings::wireframe_rendering = !Crimson::Settings::wireframe_rendering;
     if(!Crimson::Window::mouse_captured) return;
 
     auto& transform = camera_entity.get_component<Crimson::Transform>();
