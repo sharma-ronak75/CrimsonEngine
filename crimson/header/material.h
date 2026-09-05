@@ -21,4 +21,10 @@ namespace Crimson
         shader.set_uniform(name.c_str(), value);
         Crimson::RawShader::use_none();
     }
+
+    namespace Primitive
+    {
+        Material create_unlit_material();
+        Material create_lit_material();
+    }
 }

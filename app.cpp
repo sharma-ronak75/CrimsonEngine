@@ -1,5 +1,6 @@
 #include "app.h"
 #include "crimson/header/component.h"
+#include "crimson/header/material.h"
 #include "crimson/header/settings.h"
 
 void App::Initialize()
@@ -20,8 +21,7 @@ void App::Initialize()
 
     auto mesh1 = Crimson::Primitive::create_cube();
     auto mesh2 = Crimson::Primitive::create_sphere(10);
-    Crimson::Material material;
-    material.shader = Crimson::RawShader::load("crimson/shaders/base_lit.glsl");
+    Crimson::Material material = Crimson::Primitive::create_lit_material();
 
     entity1 = world_handler.add_entity();
     entity1->add_component<Crimson::Transform>();
@@ -42,9 +42,6 @@ void App::Update()
 {
     if(camera_entity != nullptr) control(*camera_entity);
     world_handler.tick_preframe();
-
-    std::cout<<entity1->get_component<Crimson::MeshRenderer>().material.shader.program<<' ' 
-                <<entity2->get_component<Crimson::MeshRenderer>().material.shader.program<<'\n';
 
     if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
     if(Crimson::Input::is_key_pressed(Crimson::Key::R)) entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();

@@ -108,11 +108,11 @@ void main()
     const float K = 0.25;
     vec3 ffpos = floor(fpos / K) * K;
     float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
-    // frag_color = vec4(ftint * float((gl_PrimitiveID % 5) + 1) / 6.0, 1);
     float ambient = 0.15;
-    float diffuse = max(dot(-fnormal, LIGHT_DIR), 0) * 0.7;
-    float specular = pow(max(dot(normalize(ucampos - fpos), reflect(LIGHT_DIR, fnormal)), 0), 48) * 0.4;
+    float diffuse = max(dot(-fnormal, LIGHT_DIR), 0) * 0.5;
+    float specular = pow(max(dot(normalize(ucampos - fpos), reflect(LIGHT_DIR, fnormal)), 0), 48) * 0.5;
     float light = ambient + diffuse + specular;
     frag_color = vec4(ftint * light, 1);
+
     // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }

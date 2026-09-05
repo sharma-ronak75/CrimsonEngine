@@ -18,7 +18,7 @@ void RawShader::use_none()
 	glUseProgram(0);
 }
 
-RawShader RawShader::load(fs::path location)
+RawShader RawShader::load(fs::path location, bool strict)
 {
 	std::string raw_source = File::read(location);
 
@@ -74,18 +74,18 @@ RawShader RawShader::load(fs::path location)
 	vertex = "#version 420 core\n" + load_shader_recursive(vertex, location);
 	fragment = "#version 420 core\n" + load_shader_recursive(fragment, location);
 	
-	auto shader = load_from_raw_sources(vertex, fragment);
+	auto shader = load_from_raw_sources(vertex, fragment, strict);
 	shader.shader_path = location;
 	return shader;
 }
 
-RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std::string& fragment)
+RawShader RawShader::load_from_raw_sources(const std::string& vertex, const std::string& fragment, bool strict)
 {
-	unsigned int vertex_shader = compile_shader(GL_VERTEX_SHADER, vertex.c_str());
+	unsigned int vertex_shader = compile_shader(GL_VERTEX_SHADER, vertex.c_str(), strict);
 	unsigned int fragment_shader = 0;
 	try
 	{
-		fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragment.c_str());
+		fragment_shader = compile_shader(GL_FRAGMENT_SHADER, fragment.c_str(), strict);
 	}
 	catch(...)
 	{
@@ -167,7 +167,7 @@ std::string RawShader::load_shader_recursive(const std::string& presource, fs::p
 	return new_source;
 }
 
-unsigned int RawShader::compile_shader(unsigned int shader_type, const char* shader_source)
+unsigned int RawShader::compile_shader(unsigned int shader_type, const char* shader_source, bool strict)
 {
 	unsigned int shader = glCreateShader(shader_type);
 	glShaderSource(shader, 1, &shader_source, NULL);
@@ -185,7 +185,7 @@ unsigned int RawShader::compile_shader(unsigned int shader_type, const char* sha
 		printf("Failed to compile shader.\n");
 		printf("%s\n", infoLog.data());
 		glDeleteShader(shader);
-		throw std::runtime_error("Failed to compile shader");
+		if(strict) throw std::runtime_error("Failed to compile shader");
 	}
 
 	return shader;
@@ -258,7 +258,7 @@ void RawShader::recompile()
 {
 	if(program == nullptr) return;
 	if(shader_path.empty()) throw std::bad_function_call();
-	auto new_shader = load(shader_path);
+	auto new_shader = load(shader_path, false);
 
 	if (program->id != 0) glDeleteProgram(program->id);
     program->id = new_shader.program->id;
