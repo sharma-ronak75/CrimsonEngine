@@ -36,6 +36,8 @@ void App::Initialize()
     entity2->get_component<Crimson::Transform>().position = glm::vec3(1.5f, 0, 0);
     entity2->get_component<Crimson::MeshRenderer>().mesh = mesh2;
     entity2->get_component<Crimson::MeshRenderer>().material = material;
+    
+    entity2->add_component<Crimson::Enviroment>();
 }
 
 void App::Update()

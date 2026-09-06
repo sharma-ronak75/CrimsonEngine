@@ -82,8 +82,8 @@ void main()
     mat4 model = T * Rz * Ry * Rx * S; // S-R-T
     vec4 worldPos = model * vec4(position, 1.0);
 
-    // fpos = worldPos.xyz;
-    fpos = position;
+    fpos = worldPos.xyz;
+    // fpos = position;
 
     gl_Position = umvp * worldPos;
 }

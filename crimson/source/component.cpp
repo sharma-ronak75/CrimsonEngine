@@ -52,7 +52,7 @@ namespace Crimson
 
     // MeshRenderer
 
-    void MeshRenderer::bind() const
+    void MeshRenderer::bind() const noexcept
     {
         if(mesh == nullptr) return;
 

@@ -61,8 +61,23 @@ namespace Crimson
         MeshRenderer(std::shared_ptr<Mesh> mesh, Material material);
         ~MeshRenderer();
 
-        void bind() const;
+        void bind() const noexcept;
 
         virtual std::string type() const noexcept override { return "MeshRenderer"; }
+    };
+
+    class Enviroment: public Component
+    {
+    public:
+        glm::vec3 sun_color{0.8, 0.7, 0.1};
+        glm::vec3 horizon_color{0.9};
+        glm::vec3 zenith_color{0.5};
+        float horizon_fade{0.5F};
+
+        Enviroment() = default;
+        Enviroment(glm::vec3 sun_color, glm::vec3 horizon_color, glm::vec3 zenith_color, float horizon_fade) :
+            sun_color(sun_color), horizon_color(horizon_color), zenith_color(zenith_color), horizon_fade(horizon_fade) {}
+
+        virtual std::string type() const noexcept override { return "Enviroment"; }
     };
 }
