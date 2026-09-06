@@ -70,9 +70,11 @@ namespace Crimson
     {
     public:
         glm::vec3 sun_color{0.8, 0.7, 0.1};
-        glm::vec3 horizon_color{0.9};
-        glm::vec3 zenith_color{0.5};
-        float horizon_fade{0.5F};
+        glm::vec3 sky_color{0.4, 0.6, 0.95};
+        glm::vec3 horizon_color{0.8};
+        glm::vec3 zenith_color{0.3};
+        float horizon_fade{1.8F};
+        float sun_angle{0.1F};
 
         Enviroment() = default;
         Enviroment(glm::vec3 sun_color, glm::vec3 horizon_color, glm::vec3 zenith_color, float horizon_fade) :

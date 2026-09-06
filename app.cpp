@@ -2,6 +2,8 @@
 #include "crimson/header/component.h"
 #include "crimson/header/material.h"
 #include "crimson/header/settings.h"
+#include "crimson/header/system.h"
+#include "crimson/header/window.h"
 
 void App::Initialize()
 {
@@ -20,7 +22,7 @@ void App::Initialize()
     world_handler.initialize_systems();
 
     auto mesh1 = Crimson::Primitive::create_cube();
-    auto mesh2 = Crimson::Primitive::create_sphere(10);
+    auto mesh2 = Crimson::Primitive::create_sphere(20);
     Crimson::Material material = Crimson::Primitive::create_lit_material();
 
     entity1 = world_handler.add_entity();
@@ -46,7 +48,12 @@ void App::Update()
     world_handler.tick_preframe();
 
     if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
-    if(Crimson::Input::is_key_pressed(Crimson::Key::R)) entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();
+    // if(Crimson::Input::is_key_pressed(Crimson::Key::R)) world_handler.get_system<Crimson::RenderSystem>().enviroment_material.shader.recompile();
+    if(Crimson::Window::get_tick() % 60 == 0)
+    {
+        entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();
+        world_handler.get_system<Crimson::RenderSystem>().enviroment_material.shader.recompile();
+    }
     if(!animation_pause)
     {
         entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
@@ -74,6 +81,7 @@ void App::control(Crimson::Entity& camera_entity)
     if(Crimson::Input::is_key_pressed(Crimson::Key::ESCAPE)) Crimson::Window::mouse_captured = !Crimson::Window::mouse_captured;
     if(Crimson::Input::is_key_pressed(Crimson::Key::RIGHT_SHIFT)) Crimson::Settings::wireframe_rendering = !Crimson::Settings::wireframe_rendering;
     if(!Crimson::Window::mouse_captured) return;
+
 
     auto& transform = camera_entity.get_component<Crimson::Transform>();
     const float sensitivity = 0.05F;

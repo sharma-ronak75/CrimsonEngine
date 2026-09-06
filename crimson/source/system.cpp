@@ -81,9 +81,17 @@ namespace Crimson
     {
         if(env_entity == nullptr) throw std::invalid_argument("env_entity found to be nullptr");
         if(camera_entity == nullptr) throw std::invalid_argument("camera_entity found to be nullptr");
-        
+
+        const auto& enviroment = env_entity->get_component<Enviroment>();
+
         set_camera_params(enviroment_material, camera_entity);
-        // TODO: set env props to shader
+        enviroment_material.set_shader_attribute("usun_color", enviroment.sun_color);
+        enviroment_material.set_shader_attribute("uhorizon_color", enviroment.horizon_color);
+        enviroment_material.set_shader_attribute("uzenith_color", enviroment.zenith_color);
+        enviroment_material.set_shader_attribute("usky_color", enviroment.sky_color);
+        enviroment_material.set_shader_attribute("usun_angle", enviroment.sun_angle);
+        enviroment_material.set_shader_attribute("uhorizon_fade", enviroment.horizon_fade);
+        
         enviroment_material.shader.use();
         glDisable(GL_DEPTH_TEST);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

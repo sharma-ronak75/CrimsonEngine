@@ -6,7 +6,6 @@ uniform vec3 ucamrot;
 uniform vec3 ucamforward;
 uniform vec3 ucamright;
 uniform vec3 ucamup;
-// uniform float utime;
 
 out vec3 fspos;
 
@@ -90,9 +89,31 @@ void main()
 
 layout(location = 0) out vec4 frag_color;
 
+uniform vec3 ucampos;
+uniform vec3 ucamrot;
+uniform vec3 ucamforward;
+uniform vec3 ucamright;
+uniform vec3 ucamup;
+
+uniform vec3 usun_color;
+uniform vec3 uhorizon_color;
+uniform vec3 usky_color;
+uniform vec3 uzenith_color;
+uniform float usun_angle;
+uniform float uhorizon_fade;
+uniform float utime;
+
 in vec3 fspos;
+
+const float PI = 3.14159;
 
 void main()
 {
-    frag_color = vec4(abs(fspos), 1);
+    vec3 col;
+    float y = fspos.y;
+    float yangle = pow(y * 5, (1/uhorizon_fade));
+    if(y > 0) col = mix(uhorizon_color, usky_color, yangle);
+    else col = mix(uhorizon_color, uzenith_color, yangle);
+
+    frag_color = vec4(col, 1);
 }

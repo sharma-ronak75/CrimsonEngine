@@ -84,8 +84,8 @@ void main()
     mat4 model = T * Rz * Ry * Rx * S; // S-R-T
     vec4 worldPos = model * vec4(position, 1.0);
 
-    // fpos = worldPos.xyz;
-    fpos = position;
+    fpos = worldPos.xyz;
+    // fpos = position;
 
     fnormal = mat3(transpose(inverse(model))) * normal;
 
@@ -101,7 +101,7 @@ uniform vec3 ucampos;
 in vec3 ftint;
 in vec3 fpos;
 in vec3 fnormal;
-const vec3 LIGHT_DIR = normalize(vec3(-1, -4, -3));
+const vec3 LIGHT_DIR = normalize(vec3(-2, -4, -3));
 
 void main()
 {
@@ -113,6 +113,7 @@ void main()
     float specular = pow(max(dot(normalize(ucampos - fpos), reflect(LIGHT_DIR, fnormal)), 0), 48) * 0.5;
     float light = ambient + diffuse + specular;
     frag_color = vec4(ftint * light, 1);
+    // frag_color = vec4(fnormal, 1);
 
     // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }
