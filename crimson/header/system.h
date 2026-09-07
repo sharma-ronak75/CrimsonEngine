@@ -10,9 +10,23 @@ namespace Crimson
     public:
         virtual ~System() = default;
         virtual void initialize() = 0;
-        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) const = 0;
-        virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) const = 0;
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) = 0;
+        virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) = 0;
         virtual std::string type() const noexcept { return "Base"; }
+    };
+
+    class LightingSystem: public System
+    {
+    private:
+        GLuint directional_light_SSBO{};
+        GLuint point_light_SSBO{};
+        std::vector<float> directional_light_buffer;
+        std::vector<float> point_light_buffer;
+    public:
+        virtual void initialize() override;
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual std::string type() const noexcept override { return "LightingSystem"; }
     };
 
     class RenderSystem: public System
@@ -26,8 +40,8 @@ namespace Crimson
         Material enviroment_material{}; // temp public
 
         virtual void initialize() override;
-        void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) const override;
-        void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) const override;
+        void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
         void set_active_camera(const std::shared_ptr<Entity>& entity);
         
 

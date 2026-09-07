@@ -82,4 +82,28 @@ namespace Crimson
 
         virtual std::string type() const noexcept override { return "Enviroment"; }
     };
+    
+    class DirectionalLight: public Component
+    {
+    public:
+        glm::vec3 color{1.0F};
+        float intensity{1.0F};
+        
+        DirectionalLight() = default;
+        DirectionalLight(glm::vec3 color, glm::vec3 direction, float intensity): color(color), intensity(intensity) {}
+
+        virtual std::string type() const noexcept override { return "DirectionalLight"; }
+    };
+
+    class PointLight: public Component
+    {
+    public:
+        glm::vec3 color{1.0F};
+        float intensity{1.0F};
+        
+        PointLight() = default;
+        PointLight(glm::vec3 color, glm::vec3 position, float intensity): color(color), intensity(intensity) {}
+
+        virtual std::string type() const noexcept override { return "PointLight"; }
+    };
 }

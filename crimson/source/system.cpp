@@ -5,14 +5,57 @@
 
 namespace Crimson
 {
+    void LightingSystem::initialize()
+    {
+        if(directional_light_SSBO == 0) glGenBuffers(1, &directional_light_SSBO);
+        if(point_light_SSBO == 0) glGenBuffers(1, &point_light_SSBO);
+    }
+
+    void LightingSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {}
+
+    void LightingSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        directional_light_buffer.clear();
+        point_light_buffer.clear();
+        for(auto& entity: entities)
+        {
+            if(
+                entity->has_component<DirectionalLight>() &&
+                entity->has_component<Transform>()
+            )
+            {
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().get_forward().x);
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().get_forward().y);
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().get_forward().z);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.x);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.y);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.z);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().intensity);
+            }
+            if(
+                entity->has_component<PointLight>() &&
+                entity->has_component<Transform>()
+            )
+            {
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.x);
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.y);
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.z);
+                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.x);
+                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.y);
+                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.z);
+                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().intensity);
+            }
+        }
+    }
+
     void RenderSystem::initialize()
     {
         enviroment_material = Material(RawShader::load("crimson/shaders/enviroment.glsl"));
     };
 
-    void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) const {};
+    void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {};
 
-    void RenderSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) const
+    void RenderSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
     {
         std::vector<std::shared_ptr<Entity>> mesh_entities;
         std::shared_ptr<Entity> env_entity = nullptr;

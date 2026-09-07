@@ -3,15 +3,15 @@ layout(location=0) in vec3 position;
 layout(location=1) in vec3 tint;
 layout(location=2) in vec3 normal;
 
+// layout(std430, binding=0) buffer dlbuf
+// {
+//     float dlbuf2;
+// };
+
 uniform mat4 umvp;
 uniform vec3 umeshpos;
 uniform vec3 umeshrot;
 uniform vec3 umeshscale;
-// uniform vec3 ucampos;
-// uniform vec3 ucamforward;
-// uniform vec3 ucamright;
-// uniform vec3 ucamup;
-// uniform float utime;
 
 out vec3 ftint;
 out vec3 fpos;
