@@ -26,5 +26,6 @@ namespace Crimson
     {
         Material create_unlit_material();
         Material create_lit_material();
+        Material create_enviroment_material();
     }
 }

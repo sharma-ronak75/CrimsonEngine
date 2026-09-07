@@ -23,14 +23,8 @@ void App::Initialize()
     world_handler.initialize_systems();
 
     auto mesh1 = Crimson::Primitive::create_cube();
-
-    for(auto& vertex: mesh1->mesh_data)
-    {
-        vertex.tint = glm::vec3(0.5, 0.2, 1.0);
-    }
-
     auto mesh2 = Crimson::Primitive::create_sphere(20);
-    Crimson::Material material1 = Crimson::Primitive::create_unlit_material();
+    Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
 
     entity1 = world_handler.add_entity();
@@ -39,9 +33,6 @@ void App::Initialize()
     entity1->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0);
     entity1->get_component<Crimson::MeshRenderer>().mesh = mesh1;
     entity1->get_component<Crimson::MeshRenderer>().material = material1;
-    entity1->add_component<Crimson::PointLight>();
-    entity1->get_component<Crimson::PointLight>().color = glm::vec3(0.5, 0.2, 1.0);
-    entity1->get_component<Crimson::PointLight>().intensity = 5.0F;
 
     entity2 = world_handler.add_entity();
     entity2->add_component<Crimson::Transform>();
@@ -51,19 +42,20 @@ void App::Initialize()
     entity2->get_component<Crimson::MeshRenderer>().material = material2;
     
     entity2->add_component<Crimson::Enviroment>();
+    entity2->get_component<Crimson::Enviroment>().material = Crimson::Primitive::create_enviroment_material();
+    entity2->get_component<Crimson::Enviroment>().sun_bleed = glm::vec3(1.2, 1, 1);
+    
+    entity3 = world_handler.add_entity();
+    entity3->add_component<Crimson::Transform>();
+    entity3->add_component<Crimson::DirectionalLight>();
+    entity3->get_component<Crimson::Transform>().rotation.x = -35;
+    entity3->get_component<Crimson::Transform>().rotation.y = 55;
 
-    // entity3 = world_handler.add_entity();
-    // entity3->add_component<Crimson::Transform>();
-    // entity3->add_component<Crimson::DirectionalLight>();
-    // entity3->get_component<Crimson::Transform>().rotation.x = 15;
-    // entity3->get_component<Crimson::Transform>().rotation.y = 55;
-    // entity3->get_component<Crimson::DirectionalLight>().color = glm::vec3(0.3, 0.3, 1.0);
-
-    // entity4 = world_handler.add_entity();
-    // entity4->add_component<Crimson::Transform>();
-    // entity4->add_component<Crimson::PointLight>();
-    // entity4->get_component<Crimson::Transform>().position = glm::vec3(1, 1, 1);
-    // entity4->get_component<Crimson::PointLight>().color = glm::vec3(1.0, 0.3, 0.3);
+    entity4 = world_handler.add_entity();
+    entity4->add_component<Crimson::Transform>();
+    entity4->add_component<Crimson::DirectionalLight>();
+    entity4->get_component<Crimson::Transform>().rotation.x = -35;
+    entity4->get_component<Crimson::Transform>().rotation.y = 55;
 }
 
 void App::Update()
@@ -72,11 +64,10 @@ void App::Update()
     world_handler.tick_preframe();
 
     if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
-    // if(Crimson::Input::is_key_pressed(Crimson::Key::R)) world_handler.get_system<Crimson::RenderSystem>().enviroment_material.shader.recompile();
     if(Crimson::Window::get_tick() % 60 == 0)
     {
         entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();
-        world_handler.get_system<Crimson::RenderSystem>().enviroment_material.shader.recompile();
+        entity2->get_component<Crimson::Enviroment>().material.shader.recompile();
     }
     if(!animation_pause)
     {
@@ -89,6 +80,12 @@ void App::Update()
         entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
         entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
         entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
+
+        entity3->get_component<Crimson::Transform>().rotation.y += 1;
+        entity3->get_component<Crimson::Transform>().rotation.x += 2;
+
+        entity4->get_component<Crimson::Transform>().rotation.z += 3;
+        entity4->get_component<Crimson::Transform>().rotation.x += 1;
     }
 }
 

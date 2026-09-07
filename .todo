@@ -1,7 +1,6 @@
-* Add suns for DirectionalLight in Enviroment
 > get_component causes segfault if component doesn't exist instead of throwing error;
 > Add specular/diffuse/ambient strengh accessible from material
 > Make sphere have proper spherical normals
 > Make path non relative when launching build from any location
-> If camera FOV is too large or near plane > 10 Enviroment doesn't render
+> If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render
 # Physics

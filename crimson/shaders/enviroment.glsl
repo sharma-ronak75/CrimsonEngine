@@ -88,6 +88,9 @@ void main()
 #fragment
 
 layout(location = 0) out vec4 frag_color;
+layout(std430, binding=0) buffer buf0 { float dlbuf[]; };
+const int DL_STRIDE = 7;
+uniform int udlbufsize;
 
 uniform vec3 ucampos;
 uniform vec3 ucamrot;
@@ -99,7 +102,9 @@ uniform vec3 usun_color;
 uniform vec3 uhorizon_color;
 uniform vec3 usky_color;
 uniform vec3 uzenith_color;
-uniform float usun_angle;
+uniform vec3 usun_bleed;
+uniform float usun_size;
+uniform float usun_strength;
 uniform float uhorizon_fade;
 uniform float utime;
 
@@ -110,10 +115,29 @@ const float PI = 3.14159;
 void main()
 {
     vec3 col;
-    float y = fspos.y;
-    float yangle = pow(y * 5, (1/uhorizon_fade));
-    if(y > 0) col = mix(uhorizon_color, usky_color, yangle);
-    else col = mix(uhorizon_color, uzenith_color, yangle);
+    vec3 view = normalize(fspos);
+    float y = abs(view.y);
+    y = pow(y, 1.0/uhorizon_fade);
+    float t = smoothstep(0, 1, y);
+    col = mix(uhorizon_color, view.y > 0 ? usky_color : uzenith_color, t);
+
+    int dlcount = udlbufsize / DL_STRIDE;
+
+    vec3 bleed = vec3(1000/usun_size);
+    bleed /= usun_bleed;
+
+    for(int i = 0; i < dlcount; i ++)
+    {
+        vec3 sun_direction = vec3(dlbuf[i * DL_STRIDE + 0], dlbuf[i * DL_STRIDE + 1], dlbuf[i * DL_STRIDE + 2]);
+        col = mix(
+            col,
+            usun_strength * vec3(1, 1, 1),
+            pow(vec3(max(
+                dot(view, -sun_direction),
+                0
+            )), bleed)
+        );
+    }
 
     frag_color = vec4(col, 1);
 }

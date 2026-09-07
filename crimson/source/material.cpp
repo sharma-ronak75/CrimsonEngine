@@ -8,12 +8,17 @@ namespace Crimson
     {
         Material create_unlit_material()
         {
-            return Material{Crimson::RawShader::load("crimson/shaders/base_unlit.glsl")};
+            return Material{RawShader::load("crimson/shaders/base_unlit.glsl")};
         }
         
         Material create_lit_material()
         {
-            return Material{Crimson::RawShader::load("crimson/shaders/base_lit.glsl")};
+            return Material{RawShader::load("crimson/shaders/base_lit.glsl")};
+        }
+
+        Material create_enviroment_material()
+        {
+            return Material{RawShader::load("crimson/shaders/enviroment.glsl")};
         }
     }
 }

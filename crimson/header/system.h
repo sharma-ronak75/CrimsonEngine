@@ -38,7 +38,6 @@ namespace Crimson
         void render_enviroment(const std::shared_ptr<Entity>& env_entity, const std::shared_ptr<Entity>& camera_entity) const;
         void set_camera_params(const Material& material, const std::shared_ptr<Entity>& camera_entity) const;
     public:
-        Material enviroment_material{}; // temp public
 
         virtual void initialize() override;
         void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;

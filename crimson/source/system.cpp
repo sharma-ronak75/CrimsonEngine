@@ -57,6 +57,11 @@ namespace Crimson
                 auto& mesh_renderer = entity->get_component<MeshRenderer>();
                 bind(mesh_renderer.material);
             }
+            if(entity->has_component<Enviroment>())
+            {
+                auto& enviroment = entity->get_component<Enviroment>();
+                bind(enviroment.material);
+            }
         }
     }
 
@@ -77,10 +82,7 @@ namespace Crimson
         Crimson::RawShader::use_none();
     }
 
-    void RenderSystem::initialize()
-    {
-        enviroment_material = Material(RawShader::load("crimson/shaders/enviroment.glsl"));
-    };
+    void RenderSystem::initialize() {}
 
     void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {};
 
@@ -104,16 +106,8 @@ namespace Crimson
         }
 
         if(camera_entity == nullptr) return;
-
-        if(env_entity != nullptr)
-        {
-            render_enviroment(env_entity, camera_entity);
-        }
-
-        for(auto& mesh_entity: mesh_entities)
-        {
-            render_mesh_entity(mesh_entity, camera_entity);
-        }
+        if(env_entity != nullptr) render_enviroment(env_entity, camera_entity);
+        for(auto& mesh_entity: mesh_entities) render_mesh_entity(mesh_entity, camera_entity);
     }
 
     void RenderSystem::set_camera_params(const Material& material, const std::shared_ptr<Entity>& camera_entity) const
@@ -127,7 +121,7 @@ namespace Crimson
         material.set_shader_attribute("ucamright", camera_entity->get_component<Transform>().get_right());
         material.set_shader_attribute("ucamup", camera_entity->get_component<Transform>().get_up());
         material.set_shader_attribute("ucamrot", camera_entity->get_component<Transform>().rotation);
-        material.set_shader_attribute("utime", Crimson::Window::get_ticked_time());
+        material.set_shader_attribute("utime", Crimson::Window::get_ticked_time()); // why
     }
 
     void RenderSystem::render_mesh_entity(const std::shared_ptr<Entity>& mesh_entity, const std::shared_ptr<Entity>& camera_entity) const
@@ -155,14 +149,18 @@ namespace Crimson
         if(camera_entity == nullptr) throw std::invalid_argument("camera_entity found to be nullptr");
 
         const auto& enviroment = env_entity->get_component<Enviroment>();
+        const auto& enviroment_material = enviroment.material;
 
         set_camera_params(enviroment_material, camera_entity);
         enviroment_material.set_shader_attribute("usun_color", enviroment.sun_color);
         enviroment_material.set_shader_attribute("uhorizon_color", enviroment.horizon_color);
         enviroment_material.set_shader_attribute("uzenith_color", enviroment.zenith_color);
         enviroment_material.set_shader_attribute("usky_color", enviroment.sky_color);
-        enviroment_material.set_shader_attribute("usun_angle", enviroment.sun_angle);
+        enviroment_material.set_shader_attribute("usun_size", enviroment.sun_size);
+        enviroment_material.set_shader_attribute("usun_strength", enviroment.sun_strength);
+        enviroment_material.set_shader_attribute("usun_bleed", enviroment.sun_bleed);
         enviroment_material.set_shader_attribute("uhorizon_fade", enviroment.horizon_fade);
+        enviroment_material.set_shader_attribute("udraw_sun", enviroment.draw_sun);
         
         enviroment_material.shader.use();
         glDisable(GL_DEPTH_TEST);
