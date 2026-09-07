@@ -51,11 +51,11 @@ void App::Initialize()
     entity3->get_component<Crimson::Transform>().rotation.x = -35;
     entity3->get_component<Crimson::Transform>().rotation.y = 55;
 
-    entity4 = world_handler.add_entity();
-    entity4->add_component<Crimson::Transform>();
-    entity4->add_component<Crimson::DirectionalLight>();
-    entity4->get_component<Crimson::Transform>().rotation.x = -35;
-    entity4->get_component<Crimson::Transform>().rotation.y = 55;
+    // entity4 = world_handler.add_entity();
+    // entity4->add_component<Crimson::Transform>();
+    // entity4->add_component<Crimson::DirectionalLight>();
+    // entity4->get_component<Crimson::Transform>().rotation.x = -35;
+    // entity4->get_component<Crimson::Transform>().rotation.y = 55;
 }
 
 void App::Update()
@@ -84,8 +84,8 @@ void App::Update()
         entity3->get_component<Crimson::Transform>().rotation.y += 1;
         entity3->get_component<Crimson::Transform>().rotation.x += 2;
 
-        entity4->get_component<Crimson::Transform>().rotation.z += 3;
-        entity4->get_component<Crimson::Transform>().rotation.x += 1;
+        // entity4->get_component<Crimson::Transform>().rotation.z += 3;
+        // entity4->get_component<Crimson::Transform>().rotation.x += 1;
     }
 }
 

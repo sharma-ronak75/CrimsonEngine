@@ -109,6 +109,7 @@ void main()
 {
     float ambient = 0.15;
     vec3 light = vec3(ambient);
+    vec3 normal = normalize(fnormal);
 
     int dlcount = udlbufsize / DL_STRIDE;
     for(int i = 0; i < dlcount; i ++)
@@ -116,9 +117,9 @@ void main()
         vec3 light_dir = vec3(dlbuf[i * DL_STRIDE + 0], dlbuf[i * DL_STRIDE + 1], dlbuf[i * DL_STRIDE + 2]);
         vec3 light_col = vec3(dlbuf[i * DL_STRIDE + 3], dlbuf[i * DL_STRIDE + 4], dlbuf[i * DL_STRIDE + 5]);
         float intensity = dlbuf[i * DL_STRIDE + 6];
-        
-        float diffuse = max(dot(-fnormal, light_dir), 0) * 0.5;
-        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, fnormal)), 0), 32) * 0.5;
+
+        float diffuse = max(dot(-normal, light_dir), 0) * 0.5;
+        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, normal)), 0), 32) * 0.5;
         light += intensity * light_col * (diffuse + specular);
     }
 
@@ -131,8 +132,8 @@ void main()
         float distsqr = dot(light_pos - fpos, light_pos - fpos);
         
         float intensity = plbuf[i * DL_STRIDE + 6];
-        float diffuse = max(dot(-fnormal, light_dir), 0) * 0.5;
-        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, fnormal)), 0), 48) * 0.5;
+        float diffuse = max(dot(-normal, light_dir), 0) * 0.5;
+        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, normal)), 0), 48) * 0.5;
         light += intensity * light_col * (diffuse + specular) / distsqr;
     }
 
