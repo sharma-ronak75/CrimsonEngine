@@ -37,13 +37,13 @@ namespace Crimson
                 entity->has_component<Transform>()
             )
             {
-                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.x);
-                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.y);
-                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.z);
-                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.x);
-                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.y);
-                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.z);
-                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().intensity);
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.x);
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.y);
+                point_light_buffer.emplace_back(entity->get_component<Transform>().position.z);
+                point_light_buffer.emplace_back(entity->get_component<PointLight>().color.x);
+                point_light_buffer.emplace_back(entity->get_component<PointLight>().color.y);
+                point_light_buffer.emplace_back(entity->get_component<PointLight>().color.z);
+                point_light_buffer.emplace_back(entity->get_component<PointLight>().intensity);
             }
         }
 
@@ -71,8 +71,8 @@ namespace Crimson
 
         glBindBuffer(GL_SHADER_STORAGE_BUFFER, point_light_SSBO);
         glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float) * point_light_buffer.size(), point_light_buffer.data(), GL_STATIC_DRAW);
-        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, point_light_SSBO);
-        material.set_shader_attribute<int>("udlbufsize", point_light_buffer.size());
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, point_light_SSBO);
+        material.set_shader_attribute<int>("uplbufsize", point_light_buffer.size());
 
         Crimson::RawShader::use_none();
     }

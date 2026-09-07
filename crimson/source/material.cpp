@@ -1,14 +1,19 @@
 #include "../header/material.h"
 
-namespace Crimson::Primitive
+namespace Crimson
 {
-    Material create_unlit_material()
+    Material::Material(RawShader shader): shader(shader) {}
+
+    namespace Primitive
     {
-        return Material{Crimson::RawShader::load("crimson/shaders/base_unlit.glsl")};
-    }
-    
-    Material create_lit_material()
-    {
-        return Material{Crimson::RawShader::load("crimson/shaders/base_lit.glsl")};
+        Material create_unlit_material()
+        {
+            return Material{Crimson::RawShader::load("crimson/shaders/base_unlit.glsl")};
+        }
+        
+        Material create_lit_material()
+        {
+            return Material{Crimson::RawShader::load("crimson/shaders/base_lit.glsl")};
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace Crimson
         RawShader shader{};
 
         Material() = default;
-        Material(RawShader shader): shader(shader) {}
+        Material(RawShader shader);
         
         template<typename V> void set_shader_attribute(const std::string& name, V value) const;
     };

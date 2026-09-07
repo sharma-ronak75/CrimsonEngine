@@ -90,12 +90,13 @@ void main()
 #fragment
 
 layout(location = 0) out vec4 frag_color;
-layout(std430, binding=0) buffer buf0
-{
-    float dlbuf[];
-};
-uniform int udlbufsize;
+layout(std430, binding=0) buffer buf0 { float dlbuf[]; };
+layout(std430, binding=1) buffer buf1 { float plbuf[]; };
 const int DL_STRIDE = 7;
+const int PL_STRIDE = 7;
+uniform int udlbufsize;
+uniform int uplbufsize;
+
 uniform float utime;
 uniform vec3 ucampos;
 
@@ -106,23 +107,34 @@ const vec3 LIGHT_DIR = normalize(vec3(-2, -4, -3));
 
 void main()
 {
-    const float K = 0.25;
-    vec3 ffpos = floor(fpos / K) * K;
-    float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
     float ambient = 0.15;
+    vec3 light = vec3(ambient);
 
-    float light = ambient;
     int dlcount = udlbufsize / DL_STRIDE;
     for(int i = 0; i < dlcount; i ++)
     {
         vec3 light_dir = vec3(dlbuf[i * DL_STRIDE + 0], dlbuf[i * DL_STRIDE + 1], dlbuf[i * DL_STRIDE + 2]);
+        vec3 light_col = vec3(dlbuf[i * DL_STRIDE + 3], dlbuf[i * DL_STRIDE + 4], dlbuf[i * DL_STRIDE + 5]);
+        float intensity = dlbuf[i * DL_STRIDE + 6];
+        
+        float diffuse = max(dot(-fnormal, light_dir), 0) * 0.5;
+        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, fnormal)), 0), 32) * 0.5;
+        light += intensity * light_col * (diffuse + specular);
+    }
+
+    int plcount = uplbufsize / PL_STRIDE;
+    for(int i = 0; i < plcount; i ++)
+    {
+        vec3 light_pos = vec3(plbuf[i * PL_STRIDE + 0], plbuf[i * PL_STRIDE + 1], plbuf[i * PL_STRIDE + 2]);
+        vec3 light_dir = normalize(fpos - light_pos);
+        vec3 light_col = vec3(plbuf[i * DL_STRIDE + 3], plbuf[i * DL_STRIDE + 4], plbuf[i * DL_STRIDE + 5]);
+        float distsqr = dot(light_pos - fpos, light_pos - fpos);
+        
+        float intensity = plbuf[i * DL_STRIDE + 6];
         float diffuse = max(dot(-fnormal, light_dir), 0) * 0.5;
         float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, fnormal)), 0), 48) * 0.5;
-        light += diffuse + specular;
+        light += intensity * light_col * (diffuse + specular) / distsqr;
     }
 
     frag_color = vec4(ftint * light, 1);
-    
-    // frag_color = vec4(fnormal, 1);
-    // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }

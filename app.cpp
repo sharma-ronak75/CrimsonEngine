@@ -23,35 +23,47 @@ void App::Initialize()
     world_handler.initialize_systems();
 
     auto mesh1 = Crimson::Primitive::create_cube();
+
+    for(auto& vertex: mesh1->mesh_data)
+    {
+        vertex.tint = glm::vec3(0.5, 0.2, 1.0);
+    }
+
     auto mesh2 = Crimson::Primitive::create_sphere(20);
-    Crimson::Material material = Crimson::Primitive::create_lit_material();
+    Crimson::Material material1 = Crimson::Primitive::create_unlit_material();
+    Crimson::Material material2 = Crimson::Primitive::create_lit_material();
 
     entity1 = world_handler.add_entity();
     entity1->add_component<Crimson::Transform>();
     entity1->add_component<Crimson::MeshRenderer>();
     entity1->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0);
     entity1->get_component<Crimson::MeshRenderer>().mesh = mesh1;
-    entity1->get_component<Crimson::MeshRenderer>().material = material;
+    entity1->get_component<Crimson::MeshRenderer>().material = material1;
+    entity1->add_component<Crimson::PointLight>();
+    entity1->get_component<Crimson::PointLight>().color = glm::vec3(0.5, 0.2, 1.0);
+    entity1->get_component<Crimson::PointLight>().intensity = 5.0F;
 
     entity2 = world_handler.add_entity();
     entity2->add_component<Crimson::Transform>();
     entity2->add_component<Crimson::MeshRenderer>();
     entity2->get_component<Crimson::Transform>().position = glm::vec3(1.5f, 0, 0);
     entity2->get_component<Crimson::MeshRenderer>().mesh = mesh2;
-    entity2->get_component<Crimson::MeshRenderer>().material = material;
+    entity2->get_component<Crimson::MeshRenderer>().material = material2;
     
     entity2->add_component<Crimson::Enviroment>();
 
-    entity3 = world_handler.add_entity();
-    entity3->add_component<Crimson::Transform>();
-    entity3->add_component<Crimson::DirectionalLight>();
-    entity3->get_component<Crimson::Transform>().rotation.x = 15;
-    entity3->get_component<Crimson::Transform>().rotation.y = 55;
+    // entity3 = world_handler.add_entity();
+    // entity3->add_component<Crimson::Transform>();
+    // entity3->add_component<Crimson::DirectionalLight>();
+    // entity3->get_component<Crimson::Transform>().rotation.x = 15;
+    // entity3->get_component<Crimson::Transform>().rotation.y = 55;
+    // entity3->get_component<Crimson::DirectionalLight>().color = glm::vec3(0.3, 0.3, 1.0);
 
-    entity4 = world_handler.add_entity();
-    entity4->add_component<Crimson::Transform>();
-    entity4->add_component<Crimson::PointLight>();
-    entity4->get_component<Crimson::Transform>().position = glm::vec3(1, 1, 1);
+    // entity4 = world_handler.add_entity();
+    // entity4->add_component<Crimson::Transform>();
+    // entity4->add_component<Crimson::PointLight>();
+    // entity4->get_component<Crimson::Transform>().position = glm::vec3(1, 1, 1);
+    // entity4->get_component<Crimson::PointLight>().color = glm::vec3(1.0, 0.3, 0.3);
 }
 
 void App::Update()
