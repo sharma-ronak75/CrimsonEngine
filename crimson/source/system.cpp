@@ -37,15 +37,44 @@ namespace Crimson
                 entity->has_component<Transform>()
             )
             {
-                point_light_buffer.emplace_back(entity->get_component<Transform>().position.x);
-                point_light_buffer.emplace_back(entity->get_component<Transform>().position.y);
-                point_light_buffer.emplace_back(entity->get_component<Transform>().position.z);
-                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.x);
-                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.y);
-                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.z);
-                point_light_buffer.emplace_back(entity->get_component<DirectionalLight>().intensity);
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.x);
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.y);
+                directional_light_buffer.emplace_back(entity->get_component<Transform>().position.z);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.x);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.y);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().color.z);
+                directional_light_buffer.emplace_back(entity->get_component<DirectionalLight>().intensity);
             }
         }
+
+        for(auto& entity: entities)
+        {
+            if(
+                entity->has_component<MeshRenderer>() &&
+                entity->has_component<Transform>()
+            )
+            {
+                auto& mesh_renderer = entity->get_component<MeshRenderer>();
+                bind(mesh_renderer.material);
+            }
+        }
+    }
+
+    void LightingSystem::bind(const Material& material) const
+    {
+        material.shader.use();
+
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, directional_light_SSBO);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float) * directional_light_buffer.size(), directional_light_buffer.data(), GL_STATIC_DRAW);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, directional_light_SSBO);
+        material.set_shader_attribute<int>("udlbufsize", directional_light_buffer.size());
+
+        glBindBuffer(GL_SHADER_STORAGE_BUFFER, point_light_SSBO);
+        glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(float) * point_light_buffer.size(), point_light_buffer.data(), GL_STATIC_DRAW);
+        glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, point_light_SSBO);
+        material.set_shader_attribute<int>("udlbufsize", point_light_buffer.size());
+
+        Crimson::RawShader::use_none();
     }
 
     void RenderSystem::initialize()

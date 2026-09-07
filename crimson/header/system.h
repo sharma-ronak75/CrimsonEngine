@@ -26,6 +26,7 @@ namespace Crimson
         virtual void initialize() override;
         virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
         virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        void bind(const Material& material) const;
         virtual std::string type() const noexcept override { return "LightingSystem"; }
     };
 

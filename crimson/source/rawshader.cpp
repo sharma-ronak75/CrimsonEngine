@@ -71,8 +71,8 @@ RawShader RawShader::load(fs::path location, bool strict)
 		}
 	}
 
-	vertex = "#version 420 core\n" + load_shader_recursive(vertex, location);
-	fragment = "#version 420 core\n" + load_shader_recursive(fragment, location);
+	vertex = "#version 430 core\n" + load_shader_recursive(vertex, location);
+	fragment = "#version 430 core\n" + load_shader_recursive(fragment, location);
 	
 	auto shader = load_from_raw_sources(vertex, fragment, strict);
 	shader.shader_path = location;
@@ -183,6 +183,7 @@ unsigned int RawShader::compile_shader(unsigned int shader_type, const char* sha
 		std::vector<char> infoLog(infoLen > 0 ? infoLen : 1);
 		glGetShaderInfoLog(shader, infoLen, NULL, infoLog.data());
 		printf("Failed to compile shader.\n");
+		File::write("latest.log", std::format("Failed to compile shader: ERROR:\n{} \nshader:\n{}", infoLog.data(), shader_source));
 		printf("%s\n", infoLog.data());
 		glDeleteShader(shader);
 		if(strict) throw std::runtime_error("Failed to compile shader");

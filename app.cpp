@@ -10,6 +10,7 @@ void App::Initialize()
     Crimson::Window::enable_face_culling();
     Crimson::Settings::show_debug_info = true;
 
+    world_handler.add_system<Crimson::LightingSystem>();
     world_handler.add_system<Crimson::RenderSystem>();
 
     camera_entity = world_handler.add_entity();
@@ -40,6 +41,17 @@ void App::Initialize()
     entity2->get_component<Crimson::MeshRenderer>().material = material;
     
     entity2->add_component<Crimson::Enviroment>();
+
+    entity3 = world_handler.add_entity();
+    entity3->add_component<Crimson::Transform>();
+    entity3->add_component<Crimson::DirectionalLight>();
+    entity3->get_component<Crimson::Transform>().rotation.x = 15;
+    entity3->get_component<Crimson::Transform>().rotation.y = 55;
+
+    entity4 = world_handler.add_entity();
+    entity4->add_component<Crimson::Transform>();
+    entity4->add_component<Crimson::PointLight>();
+    entity4->get_component<Crimson::Transform>().position = glm::vec3(1, 1, 1);
 }
 
 void App::Update()

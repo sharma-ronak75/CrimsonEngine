@@ -24,10 +24,6 @@ std::string read(fs::path location)
 void write(fs::path location, std::string data)
 {
     std::ofstream file(location);
-    if(!file.is_open())
-    {
-        throw std::runtime_error(("Cannot open file " + location.string()).c_str());
-    }
 
     file << data;
     file.close();

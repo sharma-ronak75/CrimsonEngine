@@ -3,11 +3,6 @@ layout(location=0) in vec3 position;
 layout(location=1) in vec3 tint;
 layout(location=2) in vec3 normal;
 
-// layout(std430, binding=0) buffer dlbuf
-// {
-//     float dlbuf2;
-// };
-
 uniform mat4 umvp;
 uniform vec3 umeshpos;
 uniform vec3 umeshrot;
@@ -95,6 +90,12 @@ void main()
 #fragment
 
 layout(location = 0) out vec4 frag_color;
+layout(std430, binding=0) buffer buf0
+{
+    float dlbuf[];
+};
+uniform int udlbufsize;
+const int DL_STRIDE = 7;
 uniform float utime;
 uniform vec3 ucampos;
 
@@ -109,11 +110,19 @@ void main()
     vec3 ffpos = floor(fpos / K) * K;
     float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
     float ambient = 0.15;
-    float diffuse = max(dot(-fnormal, LIGHT_DIR), 0) * 0.5;
-    float specular = pow(max(dot(normalize(ucampos - fpos), reflect(LIGHT_DIR, fnormal)), 0), 48) * 0.5;
-    float light = ambient + diffuse + specular;
-    frag_color = vec4(ftint * light, 1);
-    // frag_color = vec4(fnormal, 1);
 
+    float light = ambient;
+    int dlcount = udlbufsize / DL_STRIDE;
+    for(int i = 0; i < dlcount; i ++)
+    {
+        vec3 light_dir = vec3(dlbuf[i * DL_STRIDE + 0], dlbuf[i * DL_STRIDE + 1], dlbuf[i * DL_STRIDE + 2]);
+        float diffuse = max(dot(-fnormal, light_dir), 0) * 0.5;
+        float specular = pow(max(dot(normalize(ucampos - fpos), reflect(light_dir, fnormal)), 0), 48) * 0.5;
+        light += diffuse + specular;
+    }
+
+    frag_color = vec4(ftint * light, 1);
+    
+    // frag_color = vec4(fnormal, 1);
     // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }

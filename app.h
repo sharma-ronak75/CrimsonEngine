@@ -10,8 +10,10 @@ struct App
     Crimson::WorldHandler world_handler;
     
     std::shared_ptr<Crimson::Entity> camera_entity;
-    std::shared_ptr<Crimson::Entity> entity1;
-    std::shared_ptr<Crimson::Entity> entity2;
+    std::shared_ptr<Crimson::Entity> entity1{nullptr};
+    std::shared_ptr<Crimson::Entity> entity2{nullptr};
+    std::shared_ptr<Crimson::Entity> entity3{nullptr};
+    std::shared_ptr<Crimson::Entity> entity4{nullptr};
     bool animation_pause = true;
 
     void Initialize();
