@@ -30,6 +30,15 @@ namespace Crimson
         virtual std::string type() const noexcept override { return "LightingSystem"; }
     };
 
+    class BehaviorSystem: public System
+    {
+    public:
+        virtual void initialize() override;
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual std::string type() const noexcept override { return "BehaviorSystem"; }
+    };
+
     class RenderSystem: public System
     {
     private:

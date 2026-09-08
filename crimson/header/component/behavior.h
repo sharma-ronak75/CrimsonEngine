@@ -4,22 +4,27 @@
 
 namespace Crimson
 {
-    class Behaviour : public Component
+    class Behavior : public Component
     {
     private:
-        std::vector<std::unique_ptr<Script>> scripts;
+        std::vector<std::shared_ptr<Script>> scripts;
     public:
-
-        Behaviour() = default;
+        Behavior() = default;
         
-        template<typename T> T& add_script()
+        template<typename T> T& add_script(std::shared_ptr<Entity>& entity)
         {
             static_assert(std::is_base_of_v<Script, T>, "T must derive from Script");
-            auto script = std::make_unique<T>();
-            T& result = *script;
+            auto script = std::make_shared<T>(entity);
+            if(script == nullptr) throw std::bad_alloc();
 
-            scripts.push_back(std::move(script));
+            script->init();
+            T& result = *script;
+            scripts.push_back(script);
+
             return result;
-        }
+        };
+
+        void tick_preframe();
+        void tick_postframe();
     };
 }

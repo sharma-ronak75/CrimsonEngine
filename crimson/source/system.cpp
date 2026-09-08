@@ -8,6 +8,7 @@
 #include "../header/component/enviroment.h"
 #include "../header/component/pointlight.h"
 #include "../header/component/directionallight.h"
+#include "../header/component/behavior.h"
 
 namespace Crimson
 {
@@ -16,9 +17,8 @@ namespace Crimson
         if(directional_light_SSBO == 0) glGenBuffers(1, &directional_light_SSBO);
         if(point_light_SSBO == 0) glGenBuffers(1, &point_light_SSBO);
     }
-
+    
     void LightingSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {}
-
     void LightingSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
     {
         directional_light_buffer.clear();
@@ -88,8 +88,25 @@ namespace Crimson
         Crimson::RawShader::use_none();
     }
 
-    void RenderSystem::initialize() {}
+    void BehaviorSystem::initialize() {}
+    void BehaviorSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        for(auto& entity: entities)
+        { 
+            if(entity->has_component<Crimson::Behavior>()) entity->get_component<Crimson::Behavior>().tick_preframe();
+        }
+    }
 
+    void BehaviorSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
+    {
+        for(auto& entity: entities)
+        { 
+            if(entity->has_component<Crimson::Behavior>()) entity->get_component<Crimson::Behavior>().tick_postframe();
+        }
+    }
+
+
+    void RenderSystem::initialize() {}
     void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {};
 
     void RenderSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)

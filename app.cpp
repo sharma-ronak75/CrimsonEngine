@@ -1,10 +1,12 @@
 #include "app.h"
+#include "TestGame/testscript.h"
 
 void App::Initialize()
 {
     Crimson::Window::enable_face_culling();
     Crimson::Settings::show_debug_info = true;
 
+    world_handler.add_system<Crimson::BehaviorSystem>();
     world_handler.add_system<Crimson::LightingSystem>();
     world_handler.add_system<Crimson::RenderSystem>();
 
@@ -45,6 +47,9 @@ void App::Initialize()
     entity3->add_component<Crimson::DirectionalLight>();
     entity3->get_component<Crimson::Transform>().rotation.x = -35;
     entity3->get_component<Crimson::Transform>().rotation.y = 55;
+
+    entity1->add_component<Crimson::Behavior>();
+    entity1->get_component<Crimson::Behavior>().add_script<TestGame::Testscript>(entity1);
 
     // entity4 = world_handler.add_entity();
     // entity4->add_component<Crimson::Transform>();
