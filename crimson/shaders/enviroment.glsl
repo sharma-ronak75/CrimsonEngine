@@ -131,7 +131,7 @@ void main()
         vec3 sun_direction = vec3(dlbuf[i * DL_STRIDE + 0], dlbuf[i * DL_STRIDE + 1], dlbuf[i * DL_STRIDE + 2]);
         col = mix(
             col,
-            usun_strength * vec3(1, 1, 1),
+            vec3(usun_strength),
             pow(vec3(max(
                 dot(view, -sun_direction),
                 0

@@ -23,7 +23,7 @@ void App::Initialize()
     world_handler.initialize_systems();
 
     auto mesh1 = Crimson::Primitive::create_cube();
-    auto mesh2 = Crimson::Primitive::create_sphere(20);
+    auto mesh2 = Crimson::Primitive::create_sphere(10);
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
 
@@ -83,9 +83,6 @@ void App::Update()
 
         entity3->get_component<Crimson::Transform>().rotation.y += 1;
         entity3->get_component<Crimson::Transform>().rotation.x += 2;
-
-        entity4->get_component<Crimson::Transform>().rotation.z += 3;
-        entity4->get_component<Crimson::Transform>().rotation.x += 1;
     }
 }
 
