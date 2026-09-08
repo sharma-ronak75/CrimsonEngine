@@ -1,6 +1,7 @@
-> get_component causes segfault if component doesn't exist instead of throwing error;
+
 > Add specular/diffuse/ambient strengh accessible from material
 > Make sphere have proper spherical normals
 > Make path non relative when launching build from any location
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render
+> changing lit material shader attrib works in loop for some reason
 # Physics

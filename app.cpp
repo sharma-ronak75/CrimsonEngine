@@ -84,8 +84,8 @@ void App::Update()
         entity3->get_component<Crimson::Transform>().rotation.y += 1;
         entity3->get_component<Crimson::Transform>().rotation.x += 2;
 
-        // entity4->get_component<Crimson::Transform>().rotation.z += 3;
-        // entity4->get_component<Crimson::Transform>().rotation.x += 1;
+        entity4->get_component<Crimson::Transform>().rotation.z += 3;
+        entity4->get_component<Crimson::Transform>().rotation.x += 1;
     }
 }
 
