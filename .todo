@@ -1,4 +1,5 @@
 > Make path non relative when launching build from any location
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render
 > changing lit material shader attrib works in loop for some reason
+* Add script component!
 # Physics

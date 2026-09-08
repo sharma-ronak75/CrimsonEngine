@@ -2,6 +2,12 @@
 #include "../header/window.h"
 #include <glm/gtx/string_cast.hpp>
 #include <stdexcept>
+#include "../header/component/transform.h"
+#include "../header/component/meshrenderer.h"
+#include "../header/component/camera.h"
+#include "../header/component/enviroment.h"
+#include "../header/component/pointlight.h"
+#include "../header/component/directionallight.h"
 
 namespace Crimson
 {

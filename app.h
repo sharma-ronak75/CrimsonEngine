@@ -1,7 +1,5 @@
 #pragma once
 #include "crimson/crimson.h"
-#include "crimson/header/entity.h"
-#include "crimson/header/world_handler.h"
 
 struct App
 {

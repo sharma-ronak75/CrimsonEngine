@@ -1,9 +1,4 @@
 #include "app.h"
-#include "crimson/header/component.h"
-#include "crimson/header/material.h"
-#include "crimson/header/settings.h"
-#include "crimson/header/system.h"
-#include "crimson/header/window.h"
 
 void App::Initialize()
 {
