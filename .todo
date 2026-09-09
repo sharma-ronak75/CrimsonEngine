@@ -1,5 +1,6 @@
-> Make path non relative when launching build from any location
+
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render properly
-> add a proper way to set shader attribs
 # Physics
 Integrate some sort of physics library
+
+# Build System: Make path non relative when launching build from any location

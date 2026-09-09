@@ -144,7 +144,10 @@ namespace Crimson
         material.set_shader_attribute("ucamright", camera_entity->get_component<Transform>().get_right());
         material.set_shader_attribute("ucamup", camera_entity->get_component<Transform>().get_up());
         material.set_shader_attribute("ucamrot", camera_entity->get_component<Transform>().rotation);
-        material.set_shader_attribute("utime", Crimson::Window::get_ticked_time()); // why
+        material.set_shader_attribute("utime", Crimson::Window::get_ticked_time());
+        material.set_shader_attribute("uaspect_ratio", Crimson::Window::aspect_ratio);
+        material.set_shader_attribute("uviewport_size", Crimson::Window::get_size());
+        material.set_shader_attribute("utick", Crimson::Window::get_tick());
     }
 
     void RenderSystem::render_mesh_entity(const std::shared_ptr<Entity>& mesh_entity, const std::shared_ptr<Entity>& camera_entity) const
