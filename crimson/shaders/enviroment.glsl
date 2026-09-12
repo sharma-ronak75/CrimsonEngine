@@ -50,9 +50,9 @@ mat4 rotationZ(float a)
 
 void main()
 {
-    vec3 scale = vec3(4);
+    vec3 scale = vec3(8);
     vec3 rotation = -ucamrot;
-    vec3 position = ucampos + ucamforward * 1.0 - ucamright * 2.0 - ucamup * 2.0;
+    vec3 position = ucampos + ucamforward * 1.0 - ucamright * 4.0 - ucamup * 4.0;
 
     mat4 S = mat4(
         scale.x, 0, 0, 0,
