@@ -7,7 +7,7 @@ std::string read(fs::path location)
     std::ifstream file(location);
     if(!file.is_open())
     {
-        throw std::runtime_error(("Cannot open file " + location.string()).c_str());
+        throw std::runtime_error(("Can't open file " + location.string()).c_str());
     }
     
     std::string line;
