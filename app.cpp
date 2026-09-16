@@ -68,17 +68,14 @@ void App::Update()
     }
     if(!animation_pause)
     {
-        entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
-        // entity1->get_component<Crimson::Transform>().rotation.x += 1.5;
-        // entity1->get_component<Crimson::Transform>().rotation.z += 3.5;
-
-        entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
-        // entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
-        // entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
-
-        // entity3->get_component<Crimson::Transform>().rotation.y += 1;
-        // entity3->get_component<Crimson::Transform>().rotation.x += 2;
+        // entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
+        // entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
     }
+
+    if(Crimson::Input::is_key_down(Crimson::Key::I)) entity1->get_component<Crimson::Transform>().position.z += 0.1;
+    if(Crimson::Input::is_key_down(Crimson::Key::K)) entity1->get_component<Crimson::Transform>().position.z -= 0.1;
+    if(Crimson::Input::is_key_down(Crimson::Key::L)) entity1->get_component<Crimson::Transform>().position.x -= 0.1;
+    if(Crimson::Input::is_key_down(Crimson::Key::J)) entity1->get_component<Crimson::Transform>().position.x += 0.1;
 
     Crimson::Physics::PhysicsCollider col1{
         entity1->get_component<Crimson::Transform>(),
@@ -99,6 +96,9 @@ void App::Update()
         entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
         entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
     }
+
+    Crimson::Physics::CollisionResolution res = Crimson::Physics::resolve(col1, col2);
+    res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
 }
 
 void App::Render()

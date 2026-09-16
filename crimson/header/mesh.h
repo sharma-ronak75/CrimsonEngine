@@ -32,7 +32,7 @@ namespace Crimson
     {
         std::shared_ptr<Mesh> create_plane();
         std::shared_ptr<Mesh> create_cube();
-        std::shared_ptr<Mesh> create_sphere(int subdivisions = 1);
+        std::shared_ptr<Mesh> create_sphere(int subdivisions = 10);
     }
 }
 /*
