@@ -82,11 +82,11 @@ void App::Update()
 
     Crimson::Physics::PhysicsCollider col1{
         entity1->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::AABBCollider>(2, 2, 2)
+        std::make_shared<Crimson::Physics::AABBCollider>()
     };
     Crimson::Physics::PhysicsCollider col2{
         entity2->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::AABBCollider>(2, 2, 2)
+        std::make_shared<Crimson::Physics::AABBCollider>()
     };
 
     if(Crimson::Physics::is_colliding(col1, col2))
@@ -99,8 +99,6 @@ void App::Update()
         entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
         entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
     }
-
-    std::cout<<Crimson::Physics::is_colliding(col1, col2) << '\n';
 }
 
 void App::Render()

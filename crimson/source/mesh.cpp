@@ -110,6 +110,11 @@ namespace Crimson
             Vertex{glm::vec3( -1, +1,  1), glm::vec3(1), glm::vec3(0, 1, 0)}
         });
 
+        for(auto& vertex: mesh->mesh_data)
+        {
+            vertex.position *= 0.5F;
+        }
+
         return mesh;
     }
 
