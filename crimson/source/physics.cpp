@@ -45,6 +45,14 @@ namespace Crimson::Physics
         {
             return Crimson::Physics::Resolve::aabb_aabb(first, second);
         }
+        if(first.collider->type() == "SphereCollider" && second.collider->type() == "AABBCollider")
+        {
+            return Crimson::Physics::Resolve::sphere_aabb(first, second);
+        }
+        if(first.collider->type() == "AABBCollider" && second.collider->type() == "SphereCollider")
+        {
+            return Crimson::Physics::Resolve::sphere_aabb(second, first);
+        }
         else throw std::invalid_argument(std::format(
             "collision resolution not defined for first={} second={}",
                 first.collider->type(),
@@ -147,6 +155,64 @@ namespace Crimson::Physics
             }
 
             return {first.transform, second.transform};
+        }
+
+        CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb)
+        {
+            auto collider_sphere = std::dynamic_pointer_cast<SphereCollider>(sphere.collider);
+            auto collider_aabb = std::dynamic_pointer_cast<AABBCollider>(aabb.collider);
+
+            const glm::vec3 half_size{collider_aabb->x * 0.5F, collider_aabb->y * 0.5F, collider_aabb->z * 0.5F};
+            const glm::vec3 box_min = aabb.transform.position - half_size;
+            const glm::vec3 box_max = aabb.transform.position + half_size;
+            const glm::vec3 closest = glm::clamp(sphere.transform.position, box_min, box_max );
+            const glm::vec3 delta = sphere.transform.position - closest;
+
+            const float sqr_dist = glm::dot(delta, delta);
+            const float radius = collider_sphere->radius;
+            if (sqr_dist >= radius * radius) return {sphere.transform, aabb.transform};
+            
+            if (sqr_dist > 0.0F)
+            {
+                const float distance = std::sqrt(sqr_dist);
+                const glm::vec3 normal = delta / distance;
+                const float penetration = radius - distance;
+                
+                sphere.transform.position += normal * penetration * 0.5F;
+                aabb.transform.position -= normal * penetration * 0.5F;
+
+                return {sphere.transform, aabb.transform};
+            }
+            
+            const glm::vec3 local = sphere.transform.position - aabb.transform.position;
+            const float dx = half_size.x - std::abs(local.x);
+            const float dy = half_size.y - std::abs(local.y);
+            const float dz = half_size.z - std::abs(local.z);
+
+            glm::vec3 normal;
+            float distance;
+
+            if (dx <= dy && dx <= dz)
+            {
+                normal = {local.x >= 0.0F ? 1.0F : -1.0F, 0.0F, 0.0F};
+                distance = dx;
+            }
+            else if (dy <= dx && dy <= dz)
+            {
+                normal = {0.0F, local.y >= 0.0F ? 1.0F : -1.0F, 0.0F};
+                distance = dy;
+            }
+            else
+            {
+                normal = {0.0F, 0.0F, local.z >= 0.0F ? 1.0F : -1.0F};
+                distance = dz;
+            }
+
+            const float penetration = radius + distance;
+            sphere.transform.position += normal * penetration * 0.5F;
+            aabb.transform.position -= normal * penetration * 0.5F;
+
+            return {sphere.transform, aabb.transform};
         }
     }
 }

@@ -22,7 +22,7 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_cube();
+    auto mesh1 = Crimson::Primitive::create_sphere();
     auto mesh2 = Crimson::Primitive::create_cube();
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
@@ -79,7 +79,7 @@ void App::Update()
 
     Crimson::Physics::PhysicsCollider col1{
         entity1->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::AABBCollider>()
+        std::make_shared<Crimson::Physics::SphereCollider>()
     };
     Crimson::Physics::PhysicsCollider col2{
         entity2->get_component<Crimson::Transform>(),
