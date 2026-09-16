@@ -100,6 +100,7 @@ uniform float uambient_strength = 0.15;
 uniform float udiffuse_strength = 0.5;
 uniform float uspecular_strength = 0.5;
 uniform int uspecular_exponent = 32;
+uniform vec3 utint = vec3(1);
 
 uniform float utime;
 uniform vec3 ucampos;
@@ -140,5 +141,5 @@ void main()
         light += intensity * light_col * (diffuse + specular) / distsqr;
     }
 
-    frag_color = vec4(ftint * light, 1);
+    frag_color = vec4(utint * ftint * light, 1);
 }

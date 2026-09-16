@@ -1,5 +1,7 @@
 #include "app.h"
 #include "TestGame/testscript.h"
+#include "crimson/header/collider.h"
+#include "crimson/header/component/meshrenderer.h"
 
 void App::Initialize()
 {
@@ -19,7 +21,7 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_cube();
+    auto mesh1 = Crimson::Primitive::create_sphere(10);
     auto mesh2 = Crimson::Primitive::create_sphere(10);
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
@@ -76,6 +78,27 @@ void App::Update()
         // entity3->get_component<Crimson::Transform>().rotation.y += 1;
         // entity3->get_component<Crimson::Transform>().rotation.x += 2;
     }
+
+    Crimson::Physics::PhysicsCollider box1{
+        entity1->get_component<Crimson::Transform>(),
+        std::make_shared<Crimson::Physics::SphereCollider>()
+    };
+    Crimson::Physics::PhysicsCollider box2{
+        entity2->get_component<Crimson::Transform>(),
+        std::make_shared<Crimson::Physics::SphereCollider>()
+    };
+
+    if(Crimson::Physics::is_colliding(box1, box2))
+    {
+        entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
+        entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
+    }
+    else
+    {
+        entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
+        entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
+    }
+    // std::cout<<Crimson::Physics::is_colliding(box1, box2) << '\n';
 }
 
 void App::Render()

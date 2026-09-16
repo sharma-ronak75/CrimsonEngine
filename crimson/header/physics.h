@@ -10,5 +10,6 @@ namespace Crimson::Physics
     {
         bool sphere_sphere(PhysicsCollider& first, PhysicsCollider& second);
         bool aabb_aabb(PhysicsCollider& first, PhysicsCollider& second);
+        bool sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb);
     }
 }

@@ -92,16 +92,17 @@ void main()
 
 layout(location = 0) out vec4 frag_color;
 uniform float utime;
+uniform vec3 utint = vec3(1);
 
 in vec3 ftint;
 in vec3 fpos;
 
 void main()
 {
-    const float K = 0.25;
-    vec3 ffpos = floor(fpos / K) * K;
-    float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
-    frag_color = vec4(ftint, 1);
+    frag_color = vec4(utint * ftint, 1);
+    // const float K = 0.25;
+    // vec3 ffpos = floor(fpos / K) * K;
+    // float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
     // frag_color = vec4(ftint * float((gl_PrimitiveID % 5) + 1) / 6.0, 1);
-    frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
+    // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }

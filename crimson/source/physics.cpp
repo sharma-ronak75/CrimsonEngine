@@ -18,6 +18,14 @@ namespace Crimson::Physics
         {
             return Crimson::Physics::Check::aabb_aabb(first, second);
         }
+        if(first.collider->type() == "SphereCollider" && second.collider->type() == "AABBCollider")
+        {
+            return Crimson::Physics::Check::sphere_aabb(first, second);
+        }
+        if(first.collider->type() == "AABBCollider" && second.collider->type() == "SphereCollider")
+        {
+            return Crimson::Physics::Check::sphere_aabb(second, first);
+        }
         else throw std::invalid_argument(std::format(
             "collision resolution not defined for first={} second={}",
                 first.collider->type(),
@@ -48,6 +56,20 @@ namespace Crimson::Physics
                    (second.transform.position.x > first.transform.position.x && second.transform.position.x < first.transform.position.x + collider_first->x)  ||
                    (second.transform.position.y > first.transform.position.y && second.transform.position.y < first.transform.position.y + collider_first->y)  ||
                    (second.transform.position.z > first.transform.position.z && second.transform.position.z < first.transform.position.z + collider_first->z);
+        }
+
+        bool sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb)
+        {
+            auto sphere_collider = std::dynamic_pointer_cast<SphereCollider>(sphere.collider);
+            auto aabb_collider = std::dynamic_pointer_cast<AABBCollider>(aabb.collider);
+
+            const glm::vec3 aabb_min = aabb.transform.position;
+            const glm::vec3 aabb_max = aabb.transform.position + glm::vec3(aabb_collider->x, aabb_collider->y, aabb_collider->z);
+            const glm::vec3 closest = glm::clamp(sphere.transform.position, aabb_min, aabb_max);
+            const glm::vec3 delta = sphere.transform.position - closest;
+            const float sqr_dist = glm::dot(delta, delta);
+
+            return sqr_dist <= sphere_collider->radius * sphere_collider->radius;
         }
     }
 }

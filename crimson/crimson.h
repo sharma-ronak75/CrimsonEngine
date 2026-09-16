@@ -27,3 +27,5 @@
 #include "header/mesh.h"
 #include "header/material.h"
 #include "header/world_handler.h"
+#include "header/collider.h"
+#include "header/physics.h"
