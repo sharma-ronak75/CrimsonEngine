@@ -2,6 +2,7 @@
 #include "TestGame/testscript.h"
 #include "crimson/header/collider.h"
 #include "crimson/header/component/meshrenderer.h"
+#include "crimson/header/component/transform.h"
 
 void App::Initialize()
 {
@@ -21,8 +22,8 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_sphere(10);
-    auto mesh2 = Crimson::Primitive::create_sphere(10);
+    auto mesh1 = Crimson::Primitive::create_cube();
+    auto mesh2 = Crimson::Primitive::create_cube();
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
 
@@ -68,27 +69,27 @@ void App::Update()
     if(!animation_pause)
     {
         entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
-        entity1->get_component<Crimson::Transform>().rotation.x += 1.5;
-        entity1->get_component<Crimson::Transform>().rotation.z += 3.5;
+        // entity1->get_component<Crimson::Transform>().rotation.x += 1.5;
+        // entity1->get_component<Crimson::Transform>().rotation.z += 3.5;
 
         entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
-        entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
-        entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
+        // entity2->get_component<Crimson::Transform>().rotation.y += 0.5;
+        // entity2->get_component<Crimson::Transform>().rotation.z += 1.5;
 
         // entity3->get_component<Crimson::Transform>().rotation.y += 1;
         // entity3->get_component<Crimson::Transform>().rotation.x += 2;
     }
 
-    Crimson::Physics::PhysicsCollider box1{
+    Crimson::Physics::PhysicsCollider col1{
         entity1->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::SphereCollider>()
+        std::make_shared<Crimson::Physics::AABBCollider>(2, 2, 2)
     };
-    Crimson::Physics::PhysicsCollider box2{
+    Crimson::Physics::PhysicsCollider col2{
         entity2->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::SphereCollider>()
+        std::make_shared<Crimson::Physics::AABBCollider>(2, 2, 2)
     };
 
-    if(Crimson::Physics::is_colliding(box1, box2))
+    if(Crimson::Physics::is_colliding(col1, col2))
     {
         entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
         entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
@@ -98,7 +99,8 @@ void App::Update()
         entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
         entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
     }
-    // std::cout<<Crimson::Physics::is_colliding(box1, box2) << '\n';
+
+    std::cout<<Crimson::Physics::is_colliding(col1, col2) << '\n';
 }
 
 void App::Render()
