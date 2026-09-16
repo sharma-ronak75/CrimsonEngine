@@ -103,5 +103,5 @@ void main()
     float p = (ffpos.x + ffpos.y + ffpos.z) * 5;
     frag_color = vec4(ftint, 1);
     // frag_color = vec4(ftint * float((gl_PrimitiveID % 5) + 1) / 6.0, 1);
-    // frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
+    frag_color = vec4(abs(vec3(sin(utime + p * 0.1), cos(utime + p * 0.25), sin(utime + p * 0.5))), 1);
 }
