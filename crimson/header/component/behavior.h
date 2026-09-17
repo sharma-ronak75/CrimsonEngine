@@ -26,5 +26,7 @@ namespace Crimson
 
         void tick_preframe();
         void tick_postframe();
+
+        virtual std::string type() const noexcept { return "Behavior"; }
     };
 }

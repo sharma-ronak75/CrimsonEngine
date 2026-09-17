@@ -1,7 +1,6 @@
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render properly
 # Physics
-* Add a physics component like Rigidbody
-* Add a physics res System
-Integrate some sort of physics library
+* Find out whyyy physicssystem evaluates entities without rigidbody whahahahhah
+* Add other shi
 
 # Build System: Make path non relative when launching build from any locations

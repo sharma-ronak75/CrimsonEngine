@@ -22,7 +22,7 @@ namespace Crimson
         template<class system> system& get_system();
         void initialize_systems();
         void intialize_systems();
-        void tick_preframe();
+        void tick_preframe(float delta_time);
         void tick_postframe();
     };
 

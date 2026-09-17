@@ -37,11 +37,11 @@ namespace Crimson
         initialize_systems();
     }
 
-    void WorldHandler::tick_preframe()
+    void WorldHandler::tick_preframe(float delta_time)
     {
         for(auto& system: systems)
         {
-            system->tick_preframe(world_entities);
+            system->tick_preframe(world_entities, delta_time);
         }
     }
     

@@ -10,6 +10,7 @@
 #include "../header/component/directionallight.h"
 #include "../header/component/behavior.h"
 #include "../header/component/rigidbody.h"
+#include "../header/component/collider.h"
 #include "../header/physics.h"
 
 namespace Crimson
@@ -206,27 +207,35 @@ namespace Crimson
         for(auto& entity: entities)
         {
             if(entity == nullptr) throw std::invalid_argument("entity was unexpectedly found to be nullptr");
-            if(entity->has_component<Rigidbody>() && entity->has_component<Transform>()) rigid_entities.emplace_back(entity);
+            if(
+                entity->has_component<Rigidbody>() &&
+                entity->has_component<Collider>() &&
+                entity->has_component<Transform>()
+            )   rigid_entities.emplace_back(entity);
         }
-
+        
         for(auto& entity: rigid_entities)
         {
             entity->get_component<Rigidbody>().tick(entity->get_component<Transform>(), delta_time);
         }
-
+        
         for(int i = 0; i < rigid_entities.size(); i ++)
         {
             for(int j = i + 1; j < rigid_entities.size(); j ++)
             {
-                // auto entity1 = rigid_entities[i];
-                // auto entity2 = rigid_entities[j];
-                // Physics::PhysicsCollider collider1 = {
-                //     entity1->get_component<Transform>(),
-                    
-                // }
-                // entity->get_component<Rigidbody>().tick(entity->get_component<Transform>(), delta_time);
+                auto entity1 = rigid_entities[i];
+                auto entity2 = rigid_entities[j];
+                Physics::PhysicsCollider collider1 = {
+                    entity1->get_component<Transform>(),
+                        entity1->get_component<Collider>().collider
+                };
+                Physics::PhysicsCollider collider2 = {
+                    entity2->get_component<Transform>(),
+                        entity2->get_component<Collider>().collider
+                };
 
-                // TODO: Resolve collision here
+                Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2);
+                res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
             }
         }
     }

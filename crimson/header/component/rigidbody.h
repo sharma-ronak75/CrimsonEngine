@@ -5,12 +5,12 @@
 
 namespace Crimson
 {
-    constexpr glm::vec3 RIGIDBODY_VELOCITY_UNDEFINED = glm::vec3(NAN);
+    const glm::vec3 RIGIDBODY_VELOCITY_UNDEFINED = glm::vec3(std::nan(""));
 
     class Rigidbody: public Component
     {
     private:
-        glm::vec3 last_position{};
+        glm::vec3 last_position{RIGIDBODY_VELOCITY_UNDEFINED};
     public:
         glm::vec3 acceleration{};
         float mass{1.0F};
@@ -19,5 +19,7 @@ namespace Crimson
         void tick(Transform& transform, float delta_time) noexcept;
         void set_position(Transform& transform, const glm::vec3& position) noexcept;
         void set_velocity(const Transform& transform, const glm::vec3& velocity, float delta_time) noexcept;
+
+        virtual std::string type() const noexcept { return "Rigidbody"; }
     };
 }

@@ -65,8 +65,6 @@ namespace Crimson
         virtual void initialize() override {}
         void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override;
         void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override {};
-        void set_active_camera(const std::shared_ptr<Entity>& entity);
-        
 
         virtual std::string type() const noexcept override { return "PhysicsSystem"; }
     };

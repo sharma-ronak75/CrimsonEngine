@@ -23,6 +23,7 @@
 #include "header/component/pointlight.h"
 #include "header/component/enviroment.h"
 #include "header/component/meshrenderer.h"
+#include "header/component/collider.h"
 #include "header/system.h"
 #include "header/mesh.h"
 #include "header/material.h"
