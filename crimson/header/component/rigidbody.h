@@ -1,0 +1,23 @@
+#pragma once
+#include "component.h"
+#include "transform.h"
+#include <cmath>
+
+namespace Crimson
+{
+    constexpr glm::vec3 RIGIDBODY_VELOCITY_UNDEFINED = glm::vec3(NAN);
+
+    class Rigidbody: public Component
+    {
+    private:
+        glm::vec3 last_position{};
+    public:
+        glm::vec3 acceleration{};
+        float mass{1.0F};
+        
+        Rigidbody() = default;
+        void tick(Transform& transform, float delta_time) noexcept;
+        void set_position(Transform& transform, const glm::vec3& position) noexcept;
+        void set_velocity(const Transform& transform, const glm::vec3& velocity, float delta_time) noexcept;
+    };
+}
