@@ -10,7 +10,7 @@ namespace Crimson
     public:
         virtual ~System() = default;
         virtual void initialize() = 0;
-        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) = 0;
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) = 0;
         virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) = 0;
         virtual std::string type() const noexcept { return "Base"; }
     };
@@ -24,7 +24,7 @@ namespace Crimson
         std::vector<float> point_light_buffer;
     public:
         virtual void initialize() override;
-        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override {};
         virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
         void bind(const Material& material) const;
         virtual std::string type() const noexcept override { return "LightingSystem"; }
@@ -33,8 +33,8 @@ namespace Crimson
     class BehaviorSystem: public System
     {
     public:
-        virtual void initialize() override;
-        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual void initialize() override {}
+        virtual void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override;
         virtual void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
         virtual std::string type() const noexcept override { return "BehaviorSystem"; }
     };
@@ -48,12 +48,26 @@ namespace Crimson
         void set_camera_params(const Material& material, const std::shared_ptr<Entity>& camera_entity) const;
     public:
 
-        virtual void initialize() override;
-        void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) override;
+        virtual void initialize() override {}
+        void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override {};
         void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override;
         void set_active_camera(const std::shared_ptr<Entity>& entity);
         
 
         virtual std::string type() const noexcept override { return "RenderSystem"; }
+    };
+
+    class PhysicsSystem: public System
+    {
+    private:
+    public:
+
+        virtual void initialize() override {}
+        void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override;
+        void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override {};
+        void set_active_camera(const std::shared_ptr<Entity>& entity);
+        
+
+        virtual std::string type() const noexcept override { return "PhysicsSystem"; }
     };
 }

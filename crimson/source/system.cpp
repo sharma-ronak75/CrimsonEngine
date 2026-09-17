@@ -9,6 +9,8 @@
 #include "../header/component/pointlight.h"
 #include "../header/component/directionallight.h"
 #include "../header/component/behavior.h"
+#include "../header/component/rigidbody.h"
+#include "../header/physics.h"
 
 namespace Crimson
 {
@@ -18,7 +20,6 @@ namespace Crimson
         if(point_light_SSBO == 0) glGenBuffers(1, &point_light_SSBO);
     }
     
-    void LightingSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {}
     void LightingSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
     {
         directional_light_buffer.clear();
@@ -88,8 +89,7 @@ namespace Crimson
         Crimson::RawShader::use_none();
     }
 
-    void BehaviorSystem::initialize() {}
-    void BehaviorSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities)
+    void BehaviorSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time)
     {
         for(auto& entity: entities)
         { 
@@ -105,9 +105,6 @@ namespace Crimson
         }
     }
 
-
-    void RenderSystem::initialize() {}
-    void RenderSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities) {};
 
     void RenderSystem::tick_postframe(std::vector<std::shared_ptr<Entity>>& entities)
     {
@@ -199,5 +196,38 @@ namespace Crimson
         if(entity == nullptr || !entity->has_component<Camera>()) throw std::invalid_argument("Cannot set entity as active camera, it doesn't have the Camera component");
 
         active_camera = entity;
+    }
+
+
+    void PhysicsSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time)
+    {
+        std::vector<std::shared_ptr<Entity>> rigid_entities;
+
+        for(auto& entity: entities)
+        {
+            if(entity == nullptr) throw std::invalid_argument("entity was unexpectedly found to be nullptr");
+            if(entity->has_component<Rigidbody>() && entity->has_component<Transform>()) rigid_entities.emplace_back(entity);
+        }
+
+        for(auto& entity: rigid_entities)
+        {
+            entity->get_component<Rigidbody>().tick(entity->get_component<Transform>(), delta_time);
+        }
+
+        for(int i = 0; i < rigid_entities.size(); i ++)
+        {
+            for(int j = i + 1; j < rigid_entities.size(); j ++)
+            {
+                // auto entity1 = rigid_entities[i];
+                // auto entity2 = rigid_entities[j];
+                // Physics::PhysicsCollider collider1 = {
+                //     entity1->get_component<Transform>(),
+                    
+                // }
+                // entity->get_component<Rigidbody>().tick(entity->get_component<Transform>(), delta_time);
+
+                // TODO: Resolve collision here
+            }
+        }
     }
 }
