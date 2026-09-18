@@ -135,26 +135,26 @@ namespace Crimson::Physics
 
             if(overlap.x <= 0.0F || overlap.y <= 0.0F || overlap.z <= 0.0F) return {first.transform, second.transform};
 
-            const float first_strength = second.mass / (first.mass + second.mass);
-            const float second_strength = first.mass / (first.mass + second.mass);
+            const float first_collision_factor = second.mass / (first.mass + second.mass);
+            const float second_collision_factor = first.mass / (first.mass + second.mass);
 
             if(overlap.x <= overlap.y && overlap.x <= overlap.z)
             {
                 const float direction = delta.x >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.x += direction * overlap.x * first_strength;
-                second.transform.position.x -= direction * overlap.x * second_strength;
+                first.transform.position.x += direction * overlap.x * first_collision_factor;
+                second.transform.position.x -= direction * overlap.x * second_collision_factor;
             }
             else if (overlap.y <= overlap.x && overlap.y <= overlap.z)
             {
                 const float direction = delta.y >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.y += direction * overlap.y * first_strength;
-                second.transform.position.y -= direction * overlap.y * second_strength;
+                first.transform.position.y += direction * overlap.y * first_collision_factor;
+                second.transform.position.y -= direction * overlap.y * second_collision_factor;
             }
             else
             {
                 const float direction = delta.z >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.z += direction * overlap.z * first_strength;
-                second.transform.position.z -= direction * overlap.z * second_strength;
+                first.transform.position.z += direction * overlap.z * first_collision_factor;
+                second.transform.position.z -= direction * overlap.z * second_collision_factor;
             }
 
             return {first.transform, second.transform};
@@ -174,6 +174,9 @@ namespace Crimson::Physics
             const float sqr_dist = glm::dot(delta, delta);
             const float radius = collider_sphere->radius;
             if (sqr_dist >= radius * radius) return {sphere.transform, aabb.transform};
+
+            const float sphere_collision_factor = aabb.mass / (sphere.mass + aabb.mass);
+            const float aabb_collision_factor = sphere.mass / (sphere.mass + aabb.mass);
             
             if (sqr_dist > 0.0F)
             {
@@ -181,8 +184,8 @@ namespace Crimson::Physics
                 const glm::vec3 normal = delta / distance;
                 const float penetration = radius - distance;
                 
-                sphere.transform.position += normal * penetration * 0.5F;
-                aabb.transform.position -= normal * penetration * 0.5F;
+                sphere.transform.position += normal * penetration * sphere_collision_factor;
+                aabb.transform.position -= normal * penetration * aabb_collision_factor;
 
                 return {sphere.transform, aabb.transform};
             }
@@ -212,8 +215,8 @@ namespace Crimson::Physics
             }
 
             const float penetration = radius + distance;
-            sphere.transform.position += normal * penetration * 0.5F;
-            aabb.transform.position -= normal * penetration * 0.5F;
+            sphere.transform.position += normal * penetration * sphere_collision_factor;
+            aabb.transform.position -= normal * penetration * aabb_collision_factor;
 
             return {sphere.transform, aabb.transform};
         }

@@ -24,7 +24,7 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_cube();
+    auto mesh1 = Crimson::Primitive::create_sphere();
     auto mesh2 = Crimson::Primitive::create_cube();
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
@@ -32,14 +32,14 @@ void App::Initialize()
     entity1 = world_handler.add_entity();
     entity1->add_component<Crimson::Transform>();
     entity1->add_component<Crimson::MeshRenderer>();
-    entity1->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0);
+    entity1->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0.7);
     entity1->get_component<Crimson::MeshRenderer>().mesh = mesh1;
     entity1->get_component<Crimson::MeshRenderer>().material = material1;
 
     entity1->add_component<Crimson::Rigidbody>();
     entity1->add_component<Crimson::Collider>();
-    entity1->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
-    entity1->get_component<Crimson::Rigidbody>().mass = 0.1F;
+    entity1->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
+    entity1->get_component<Crimson::Rigidbody>().mass = 10.0F;
 
     entity2 = world_handler.add_entity();
     entity2->add_component<Crimson::Transform>();
