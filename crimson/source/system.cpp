@@ -235,7 +235,6 @@ namespace Crimson
                     entity2->get_component<Collider>().collider,
                     entity2->get_component<Rigidbody>().mass
                 };
-
                 Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2);
                 res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
             }

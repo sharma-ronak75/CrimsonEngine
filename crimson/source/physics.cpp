@@ -135,23 +135,26 @@ namespace Crimson::Physics
 
             if(overlap.x <= 0.0F || overlap.y <= 0.0F || overlap.z <= 0.0F) return {first.transform, second.transform};
 
+            const float first_strength = second.mass / (first.mass + second.mass);
+            const float second_strength = first.mass / (first.mass + second.mass);
+
             if(overlap.x <= overlap.y && overlap.x <= overlap.z)
             {
                 const float direction = delta.x >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.x += direction * overlap.x * 0.5F;
-                second.transform.position.x -= direction * overlap.x * 0.5F;
+                first.transform.position.x += direction * overlap.x * first_strength;
+                second.transform.position.x -= direction * overlap.x * second_strength;
             }
             else if (overlap.y <= overlap.x && overlap.y <= overlap.z)
             {
                 const float direction = delta.y >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.y += direction * overlap.y * 0.5F;
-                second.transform.position.y -= direction * overlap.y * 0.5F;
+                first.transform.position.y += direction * overlap.y * first_strength;
+                second.transform.position.y -= direction * overlap.y * second_strength;
             }
             else
             {
                 const float direction = delta.z >= 0.0F ? -1.0F : 1.0F;
-                first.transform.position.z += direction * overlap.z * 0.5F;
-                second.transform.position.z -= direction * overlap.z * 0.5F;
+                first.transform.position.z += direction * overlap.z * first_strength;
+                second.transform.position.z -= direction * overlap.z * second_strength;
             }
 
             return {first.transform, second.transform};
