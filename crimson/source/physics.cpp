@@ -117,8 +117,8 @@ namespace Crimson::Physics
             const float dist = std::sqrt(sqr_dist);
             const float dist_to_move   = dist - (collider_first->radius + collider_second->radius);
             const glm::vec3 direction  = delta / dist;
-            first.transform.position  += direction * dist_to_move * 0.5F;
-            second.transform.position -= direction * dist_to_move * 0.5F;
+            first.transform.position  += direction * dist_to_move * (second.mass / (first.mass + second.mass));
+            second.transform.position -= direction * dist_to_move * (first.mass / (first.mass + second.mass));
             return {first.transform, second.transform};
         }
 

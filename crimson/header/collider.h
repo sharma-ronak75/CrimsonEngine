@@ -36,5 +36,6 @@ namespace Crimson::Physics
     {
         Transform transform{};
         std::shared_ptr<Collider> collider;
+        float mass{1.0F};
     };
 }

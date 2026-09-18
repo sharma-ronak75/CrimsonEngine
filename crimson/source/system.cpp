@@ -226,12 +226,14 @@ namespace Crimson
                 auto entity1 = rigid_entities[i];
                 auto entity2 = rigid_entities[j];
                 Physics::PhysicsCollider collider1 = {
-                    entity1->get_component<Transform>(),
-                        entity1->get_component<Collider>().collider
+                entity1->get_component<Transform>(),
+                    entity1->get_component<Collider>().collider,
+                    entity1->get_component<Rigidbody>().mass
                 };
                 Physics::PhysicsCollider collider2 = {
                     entity2->get_component<Transform>(),
-                        entity2->get_component<Collider>().collider
+                    entity2->get_component<Collider>().collider,
+                    entity2->get_component<Rigidbody>().mass
                 };
 
                 Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2);

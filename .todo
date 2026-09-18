@@ -1,6 +1,6 @@
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render properly
 # Physics
-* Find out whyyy physicssystem evaluates entities without rigidbody whahahahhah
-* Add other shi
+* Add collision resolution between objects with unequal masses
+* Add staticbody or a bool within rigidbody to act as staticbody
 
 # Build System: Make path non relative when launching build from any locations

@@ -25,7 +25,7 @@ void App::Initialize()
     world_handler.initialize_systems();
 
     auto mesh1 = Crimson::Primitive::create_sphere();
-    auto mesh2 = Crimson::Primitive::create_cube();
+    auto mesh2 = Crimson::Primitive::create_sphere();
     Crimson::Material material1 = Crimson::Primitive::create_lit_material();
     Crimson::Material material2 = Crimson::Primitive::create_lit_material();
 
@@ -39,6 +39,7 @@ void App::Initialize()
     entity1->add_component<Crimson::Rigidbody>();
     entity1->add_component<Crimson::Collider>();
     entity1->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
+    entity1->get_component<Crimson::Rigidbody>().mass = 10.0F;
 
     entity2 = world_handler.add_entity();
     entity2->add_component<Crimson::Transform>();
@@ -53,7 +54,7 @@ void App::Initialize()
 
     entity2->add_component<Crimson::Rigidbody>();
     entity2->add_component<Crimson::Collider>();
-    entity2->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
+    entity2->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
     
     entity3 = world_handler.add_entity();
     entity3->add_component<Crimson::Transform>();
@@ -87,14 +88,14 @@ void App::Update()
     if(Crimson::Input::is_key_down(Crimson::Key::L)) entity1->get_component<Crimson::Rigidbody>().acceleration.x += 100;
     if(Crimson::Input::is_key_down(Crimson::Key::J)) entity1->get_component<Crimson::Rigidbody>().acceleration.x -= 100;
 
-    Crimson::Physics::PhysicsCollider col1{
-        entity1->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::SphereCollider>()
-    };
-    Crimson::Physics::PhysicsCollider col2{
-        entity2->get_component<Crimson::Transform>(),
-        std::make_shared<Crimson::Physics::AABBCollider>()
-    };
+    // Crimson::Physics::PhysicsCollider col1{
+    //     entity1->get_component<Crimson::Transform>(),
+    //     std::make_shared<Crimson::Physics::SphereCollider>()
+    // };
+    // Crimson::Physics::PhysicsCollider col2{
+    //     entity2->get_component<Crimson::Transform>(),
+    //     std::make_shared<Crimson::Physics::AABBCollider>()
+    // };
 
     // if(Crimson::Physics::is_colliding(col1, col2))
     // {
