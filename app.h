@@ -9,7 +9,6 @@ struct App
     
     std::shared_ptr<Crimson::Entity> camera_entity;
     std::shared_ptr<Crimson::Entity> visual{nullptr};
-    std::shared_ptr<Crimson::Entity> plane{nullptr};
 
     void Initialize();
     void Update();

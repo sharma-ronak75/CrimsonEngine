@@ -38,21 +38,25 @@ void App::Initialize()
     visual->get_component<Crimson::Enviroment>().material = Crimson::Primitive::create_enviroment_material();
     visual->get_component<Crimson::Enviroment>().sun_bleed = glm::vec3(1.2, 1, 1);
 
-    plane = world_handler.add_entity();
-    plane->add_component<Crimson::Transform>();
-    plane->add_component<Crimson::MeshRenderer>();
-    plane->add_component<Crimson::Collider>();
-    plane->add_component<Crimson::Rigidbody>();
+    auto create_plane = [this]() -> std::shared_ptr<Crimson::Entity> {
+        auto plane = world_handler.add_entity();
+        plane->name = "plane";
+        plane->add_component<Crimson::Transform>();
+        plane->add_component<Crimson::MeshRenderer>();
+        plane->add_component<Crimson::Collider>();
+        plane->add_component<Crimson::Rigidbody>();
 
-    plane->get_component<Crimson::Transform>().position.y = -10;
-    plane->get_component<Crimson::Transform>().scale = glm::vec3(100, 1, 100);
-    plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_cube();
-    plane->get_component<Crimson::MeshRenderer>().material = Crimson::Primitive::create_lit_material();
-    plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1.0, 0.8, 0.7));
-    plane->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(100, 1, 100);
-    plane->get_component<Crimson::Rigidbody>().is_static = true;
-
-    create_ball();
+        plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_cube();
+        plane->get_component<Crimson::MeshRenderer>().material = Crimson::Primitive::create_lit_material();
+        plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1.0, 0.8, 0.7));
+        plane->get_component<Crimson::Rigidbody>().is_static = true;
+        return plane;
+    };
+    
+    auto ground = create_plane();
+    ground->get_component<Crimson::Transform>().position.y = -10;
+    ground->get_component<Crimson::Transform>().scale = glm::vec3(100, 1, 100);
+    ground->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(100, 1, 100);
 }
 
 void App::create_ball()
@@ -86,12 +90,12 @@ void App::Update()
         if(!entity->has_component<Crimson::Rigidbody>()) continue;
         if(!entity->has_component<Crimson::Transform>()) continue;
         if(!entity->has_component<Crimson::Collider>()) continue;
-        if(entity == plane) continue;
+        if(entity->name == "plane") continue;
 
         entity->get_component<Crimson::Rigidbody>().acceleration.y -= 10.0F;
     }
 
-    // if(Crimson::Window::get_tick() % 120 == 0) create_ball();
+    if(Crimson::Window::get_tick() % 120 == 0) create_ball();
 }
 
 void App::Render()
