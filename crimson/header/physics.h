@@ -6,7 +6,7 @@
 namespace Crimson::Physics
 {
     bool is_colliding(PhysicsCollider& first, PhysicsCollider& second);
-    CollisionResolution resolve(PhysicsCollider& first, PhysicsCollider& second);
+    CollisionResolution resolve(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro = {});
 
     namespace Check
     {
@@ -17,8 +17,8 @@ namespace Crimson::Physics
 
     namespace Resolve
     {
-        CollisionResolution sphere_sphere(PhysicsCollider& first, PhysicsCollider& second);
-        CollisionResolution aabb_aabb(PhysicsCollider& first, PhysicsCollider& second);
-        CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb);
+        CollisionResolution sphere_sphere(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro = {});
+        CollisionResolution aabb_aabb(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro = {});
+        CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb, MassRatioOverride mro = {});
     }
 }

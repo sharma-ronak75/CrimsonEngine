@@ -33,25 +33,25 @@ namespace Crimson::Physics
             ));
     }
 
-    CollisionResolution resolve(PhysicsCollider& first, PhysicsCollider& second)
+    CollisionResolution resolve(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
     {
         if(first.collider == second.collider) throw std::invalid_argument("both PhysicsCollider cannot reference the same Collider");
      
         if(first.collider->type() == "SphereCollider" && second.collider->type() == "SphereCollider")
         {
-            return Crimson::Physics::Resolve::sphere_sphere(first, second);
+            return Crimson::Physics::Resolve::sphere_sphere(first, second, mro);
         }
         if(first.collider->type() == "AABBCollider" && second.collider->type() == "AABBCollider")
         {
-            return Crimson::Physics::Resolve::aabb_aabb(first, second);
+            return Crimson::Physics::Resolve::aabb_aabb(first, second, mro);
         }
         if(first.collider->type() == "SphereCollider" && second.collider->type() == "AABBCollider")
         {
-            return Crimson::Physics::Resolve::sphere_aabb(first, second);
+            return Crimson::Physics::Resolve::sphere_aabb(first, second, mro);
         }
         if(first.collider->type() == "AABBCollider" && second.collider->type() == "SphereCollider")
         {
-            return Crimson::Physics::Resolve::sphere_aabb(second, first);
+            return Crimson::Physics::Resolve::sphere_aabb(second, first, mro);
         }
         else throw std::invalid_argument(std::format(
             "collision resolution not defined for first={} second={}",
@@ -102,7 +102,7 @@ namespace Crimson::Physics
 
     namespace Resolve
     {
-        CollisionResolution sphere_sphere(PhysicsCollider& first, PhysicsCollider& second)
+        CollisionResolution sphere_sphere(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
         {
             auto collider_first = std::dynamic_pointer_cast<SphereCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<SphereCollider>(second.collider);
@@ -117,12 +117,22 @@ namespace Crimson::Physics
             const float dist = std::sqrt(sqr_dist);
             const float dist_to_move   = dist - (collider_first->radius + collider_second->radius);
             const glm::vec3 direction  = delta / dist;
-            first.transform.position  += direction * dist_to_move * (second.mass / (first.mass + second.mass));
-            second.transform.position -= direction * dist_to_move * (first.mass / (first.mass + second.mass));
+
+            float first_collision_factor = (second.mass / (first.mass + second.mass));
+            float second_collision_factor = (first.mass / (first.mass + second.mass));
+
+            if(!std::isnan(mro.f1))
+            {
+                first_collision_factor = mro.f1;
+                second_collision_factor = mro.f2;
+            }
+
+            first.transform.position  += direction * dist_to_move * first_collision_factor;
+            second.transform.position -= direction * dist_to_move * second_collision_factor;
             return {first.transform, second.transform};
         }
 
-        CollisionResolution aabb_aabb(PhysicsCollider& first, PhysicsCollider& second)
+        CollisionResolution aabb_aabb(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
         {
             auto collider_first = std::dynamic_pointer_cast<AABBCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<AABBCollider>(second.collider);
@@ -135,8 +145,14 @@ namespace Crimson::Physics
 
             if(overlap.x <= 0.0F || overlap.y <= 0.0F || overlap.z <= 0.0F) return {first.transform, second.transform};
 
-            const float first_collision_factor = second.mass / (first.mass + second.mass);
-            const float second_collision_factor = first.mass / (first.mass + second.mass);
+            float first_collision_factor = (second.mass / (first.mass + second.mass));
+            float second_collision_factor = (first.mass / (first.mass + second.mass));
+
+            if(!std::isnan(mro.f1))
+            {
+                first_collision_factor = mro.f1;
+                second_collision_factor = mro.f2;
+            }
 
             if(overlap.x <= overlap.y && overlap.x <= overlap.z)
             {
@@ -160,7 +176,7 @@ namespace Crimson::Physics
             return {first.transform, second.transform};
         }
 
-        CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb)
+        CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb, MassRatioOverride mro)
         {
             auto collider_sphere = std::dynamic_pointer_cast<SphereCollider>(sphere.collider);
             auto collider_aabb = std::dynamic_pointer_cast<AABBCollider>(aabb.collider);
@@ -175,8 +191,14 @@ namespace Crimson::Physics
             const float radius = collider_sphere->radius;
             if (sqr_dist >= radius * radius) return {sphere.transform, aabb.transform};
 
-            const float sphere_collision_factor = aabb.mass / (sphere.mass + aabb.mass);
-            const float aabb_collision_factor = sphere.mass / (sphere.mass + aabb.mass);
+            float sphere_collision_factor = (aabb.mass / (sphere.mass + aabb.mass));
+            float aabb_collision_factor = (sphere.mass / (sphere.mass + aabb.mass));
+
+            if(!std::isnan(mro.f1))
+            {
+                sphere_collision_factor = mro.f1;
+                aabb_collision_factor = mro.f2;
+            }
             
             if (sqr_dist > 0.0F)
             {

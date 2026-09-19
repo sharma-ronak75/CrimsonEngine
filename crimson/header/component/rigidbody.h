@@ -14,6 +14,7 @@ namespace Crimson
     public:
         glm::vec3 acceleration{};
         float mass{1.0F};
+        bool is_static{false};
         
         Rigidbody() = default;
         void tick(Transform& transform, float delta_time) noexcept;

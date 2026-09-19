@@ -8,16 +8,14 @@ struct App
     Crimson::WorldHandler world_handler;
     
     std::shared_ptr<Crimson::Entity> camera_entity;
-    std::shared_ptr<Crimson::Entity> entity1{nullptr};
-    std::shared_ptr<Crimson::Entity> entity2{nullptr};
-    std::shared_ptr<Crimson::Entity> entity3{nullptr};
-    std::shared_ptr<Crimson::Entity> entity4{nullptr};
-    bool animation_pause = true;
+    std::shared_ptr<Crimson::Entity> visual{nullptr};
+    std::shared_ptr<Crimson::Entity> plane{nullptr};
 
     void Initialize();
     void Update();
     void Render();
     void Destruct();
+    void create_ball();
 
     void control(Crimson::Entity& camera_entity);
 };

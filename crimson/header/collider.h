@@ -1,5 +1,6 @@
 #pragma once
 #include "component/transform.h"
+#include <limits>
 #include <string>
 
 namespace Crimson::Physics
@@ -37,5 +38,11 @@ namespace Crimson::Physics
         Transform transform{};
         std::shared_ptr<Collider> collider;
         float mass{1.0F};
+    };
+
+    struct MassRatioOverride
+    {
+        float f1{std::nanf("")};
+        float f2{std::nanf("")};
     };
 }

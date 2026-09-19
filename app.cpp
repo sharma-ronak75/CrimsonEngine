@@ -1,9 +1,10 @@
 #include "app.h"
-#include "TestGame/testscript.h"
 #include "crimson/header/collider.h"
 #include "crimson/header/component/meshrenderer.h"
 #include "crimson/header/component/rigidbody.h"
 #include "crimson/header/component/transform.h"
+#include "crimson/header/material.h"
+#include "crimson/header/mesh.h"
 #include "crimson/header/system.h"
 
 void App::Initialize()
@@ -24,46 +25,47 @@ void App::Initialize()
     world_handler.get_system<Crimson::RenderSystem>().set_active_camera(camera_entity);
     world_handler.initialize_systems();
 
-    auto mesh1 = Crimson::Primitive::create_sphere();
-    auto mesh2 = Crimson::Primitive::create_cube();
-    Crimson::Material material1 = Crimson::Primitive::create_lit_material();
-    Crimson::Material material2 = Crimson::Primitive::create_lit_material();
+    visual = world_handler.add_entity();
+    visual->add_component<Crimson::Transform>();
+    visual->add_component<Crimson::DirectionalLight>();
+    visual->get_component<Crimson::Transform>().rotation.x = -35;
+    visual->get_component<Crimson::Transform>().rotation.y = 55;
 
-    entity1 = world_handler.add_entity();
-    entity1->add_component<Crimson::Transform>();
-    entity1->add_component<Crimson::MeshRenderer>();
-    entity1->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0.7);
-    entity1->get_component<Crimson::MeshRenderer>().mesh = mesh1;
-    entity1->get_component<Crimson::MeshRenderer>().material = material1;
+    visual->add_component<Crimson::Enviroment>();
+    visual->get_component<Crimson::Enviroment>().material = Crimson::Primitive::create_enviroment_material();
+    visual->get_component<Crimson::Enviroment>().sun_bleed = glm::vec3(1.2, 1, 1);
 
-    entity1->add_component<Crimson::Rigidbody>();
-    entity1->add_component<Crimson::Collider>();
-    entity1->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
-    entity1->get_component<Crimson::Rigidbody>().mass = 10.0F;
+    plane = world_handler.add_entity();
+    plane->add_component<Crimson::Transform>();
+    plane->add_component<Crimson::MeshRenderer>();
 
-    entity2 = world_handler.add_entity();
-    entity2->add_component<Crimson::Transform>();
-    entity2->add_component<Crimson::MeshRenderer>();
-    entity2->get_component<Crimson::Transform>().position = glm::vec3(1.5f, 0, 0);
-    entity2->get_component<Crimson::MeshRenderer>().mesh = mesh2;
-    entity2->get_component<Crimson::MeshRenderer>().material = material2;
-    
-    entity2->add_component<Crimson::Enviroment>();
-    entity2->get_component<Crimson::Enviroment>().material = Crimson::Primitive::create_enviroment_material();
-    entity2->get_component<Crimson::Enviroment>().sun_bleed = glm::vec3(1.2, 1, 1);
+    plane->get_component<Crimson::Transform>().position.y = -10;
+    plane->get_component<Crimson::Transform>().rotation.x = 90;
+    plane->get_component<Crimson::Transform>().scale = glm::vec3(100);
+    plane->get_component<Crimson::MeshRenderer>().material = Crimson::Primitive::create_lit_material();
+    plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("ftint", glm::vec3(1.0, 0.8, 0.7));
+    plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_plane();
 
-    entity2->add_component<Crimson::Rigidbody>();
-    entity2->add_component<Crimson::Collider>();
-    entity2->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
-    
-    entity3 = world_handler.add_entity();
-    entity3->add_component<Crimson::Transform>();
-    entity3->add_component<Crimson::DirectionalLight>();
-    entity3->get_component<Crimson::Transform>().rotation.x = -35;
-    entity3->get_component<Crimson::Transform>().rotation.y = 55;
+    create_ball();
+}
 
-    entity1->add_component<Crimson::Behavior>();
-    entity1->get_component<Crimson::Behavior>().add_script<TestGame::Testscript>(entity1);
+void App::create_ball()
+{
+    auto mesh = Crimson::Primitive::create_sphere();
+    Crimson::Material material = Crimson::Primitive::create_lit_material();
+
+    std::shared_ptr<Crimson::Entity> entity;
+
+    entity = world_handler.add_entity();
+    entity->add_component<Crimson::Transform>();
+    entity->add_component<Crimson::MeshRenderer>();
+    entity->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0.7);
+    entity->get_component<Crimson::MeshRenderer>().mesh = mesh;
+    entity->get_component<Crimson::MeshRenderer>().material = material;
+
+    entity->add_component<Crimson::Rigidbody>();
+    entity->add_component<Crimson::Collider>();
+    entity->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
 }
 
 void App::Update()
@@ -71,45 +73,7 @@ void App::Update()
     if(camera_entity != nullptr) control(*camera_entity);
     world_handler.tick_preframe(deltaTime);
 
-    if(Crimson::Input::is_key_pressed(Crimson::Key::ENTER)) animation_pause = !animation_pause;
-    if(Crimson::Window::get_tick() % 60 == 0)
-    {
-        entity1->get_component<Crimson::MeshRenderer>().material.shader.recompile();
-        entity2->get_component<Crimson::Enviroment>().material.shader.recompile();
-    }
-    if(!animation_pause)
-    {
-        // entity1->get_component<Crimson::Transform>().position.x = sinf(Crimson::Window::get_ticked_time() * 2.5) * 2.5;
-        // entity2->get_component<Crimson::Transform>().position.z = cosf(Crimson::Window::get_ticked_time() * 5.5) * 2.5;
-    }
-
-    if(Crimson::Input::is_key_down(Crimson::Key::I)) entity1->get_component<Crimson::Rigidbody>().acceleration.z -= 100;
-    if(Crimson::Input::is_key_down(Crimson::Key::K)) entity1->get_component<Crimson::Rigidbody>().acceleration.z += 100;
-    if(Crimson::Input::is_key_down(Crimson::Key::L)) entity1->get_component<Crimson::Rigidbody>().acceleration.x += 100;
-    if(Crimson::Input::is_key_down(Crimson::Key::J)) entity1->get_component<Crimson::Rigidbody>().acceleration.x -= 100;
-
-    // Crimson::Physics::PhysicsCollider col1{
-    //     entity1->get_component<Crimson::Transform>(),
-    //     std::make_shared<Crimson::Physics::SphereCollider>()
-    // };
-    // Crimson::Physics::PhysicsCollider col2{
-    //     entity2->get_component<Crimson::Transform>(),
-    //     std::make_shared<Crimson::Physics::AABBCollider>()
-    // };
-
-    // if(Crimson::Physics::is_colliding(col1, col2))
-    // {
-    //     entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
-    //     entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1, 0, 0));
-    // }
-    // else
-    // {
-    //     entity1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
-    //     entity2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1));
-    // }
-
-    // Crimson::Physics::CollisionResolution res = Crimson::Physics::resolve(col1, col2);
-    // res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
+    // for(auto& entity: world_handler.get_entities())
 }
 
 void App::Render()

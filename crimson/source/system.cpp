@@ -235,7 +235,12 @@ namespace Crimson
                     entity2->get_component<Collider>().collider,
                     entity2->get_component<Rigidbody>().mass
                 };
-                Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2);
+
+                Physics::MassRatioOverride mro{};
+                if(entity1->get_component<Rigidbody>().is_static) mro = {0.0, 1.0F};
+                else if(entity2->get_component<Rigidbody>().is_static) mro = {1.0, 0.0F};
+                
+                Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2, mro);
                 res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
             }
         }
