@@ -24,6 +24,9 @@ namespace Crimson
         void intialize_systems();
         void tick_preframe(float delta_time);
         void tick_postframe();
+
+        std::vector<std::shared_ptr<Entity>> get_entity_list();
+        std::vector<std::shared_ptr<System>> get_system_list();
     };
 
     template<class system> void WorldHandler::add_system()

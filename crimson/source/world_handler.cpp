@@ -52,4 +52,15 @@ namespace Crimson
             system->tick_postframe(world_entities);
         }
     }
+
+
+    std::vector<std::shared_ptr<Entity>> WorldHandler::get_entity_list()
+    {
+        return world_entities;
+    }
+
+    std::vector<std::shared_ptr<System>> WorldHandler::get_system_list()
+    {
+        return systems;
+    }
 }

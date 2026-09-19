@@ -8,6 +8,7 @@ namespace Crimson::Physics
 {
     bool is_colliding(PhysicsCollider& first, PhysicsCollider& second)
     {
+        if(first.collider == nullptr || second.collider == nullptr) return false;
         if(first.collider == second.collider) throw std::invalid_argument("both PhysicsCollider cannot reference the same Collider");
      
         if(first.collider->type() == "SphereCollider" && second.collider->type() == "SphereCollider")
@@ -35,6 +36,7 @@ namespace Crimson::Physics
 
     CollisionResolution resolve(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
     {
+        if(first.collider == nullptr || second.collider == nullptr) return CollisionResolution{first.transform, second.transform};
         if(first.collider == second.collider) throw std::invalid_argument("both PhysicsCollider cannot reference the same Collider");
      
         if(first.collider->type() == "SphereCollider" && second.collider->type() == "SphereCollider")
@@ -64,6 +66,7 @@ namespace Crimson::Physics
     {
         bool sphere_sphere(PhysicsCollider& first, PhysicsCollider& second)
         {
+            if(first.collider == nullptr || second.collider == nullptr) return false;
             auto collider_first = std::dynamic_pointer_cast<SphereCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<SphereCollider>(second.collider);
             const glm::vec3 delta = second.transform.position - first.transform.position;
@@ -74,6 +77,7 @@ namespace Crimson::Physics
 
         bool aabb_aabb(PhysicsCollider& first, PhysicsCollider& second)
         {
+            if(first.collider == nullptr || second.collider == nullptr) return false;
             auto collider_first = std::dynamic_pointer_cast<AABBCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<AABBCollider>(second.collider);
 
@@ -87,6 +91,7 @@ namespace Crimson::Physics
 
         bool sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb)
         {
+            if(sphere.collider == nullptr || aabb.collider == nullptr) return false;
             auto sphere_collider = std::dynamic_pointer_cast<SphereCollider>(sphere.collider);
             auto aabb_collider = std::dynamic_pointer_cast<AABBCollider>(aabb.collider);
 
@@ -104,6 +109,7 @@ namespace Crimson::Physics
     {
         CollisionResolution sphere_sphere(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
         {
+            if(first.collider == nullptr || second.collider == nullptr) return CollisionResolution{first.transform, second.transform};
             auto collider_first = std::dynamic_pointer_cast<SphereCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<SphereCollider>(second.collider);
             const glm::vec3 delta = second.transform.position - first.transform.position;
@@ -134,6 +140,7 @@ namespace Crimson::Physics
 
         CollisionResolution aabb_aabb(PhysicsCollider& first, PhysicsCollider& second, MassRatioOverride mro)
         {
+            if(first.collider == nullptr || second.collider == nullptr) return CollisionResolution{first.transform, second.transform};
             auto collider_first = std::dynamic_pointer_cast<AABBCollider>(first.collider);
             auto collider_second = std::dynamic_pointer_cast<AABBCollider>(second.collider);
 
@@ -178,6 +185,7 @@ namespace Crimson::Physics
 
         CollisionResolution sphere_aabb(PhysicsCollider& sphere, PhysicsCollider& aabb, MassRatioOverride mro)
         {
+            if(sphere.collider == nullptr || aabb.collider == nullptr) return CollisionResolution{sphere.transform, aabb.transform};
             auto collider_sphere = std::dynamic_pointer_cast<SphereCollider>(sphere.collider);
             auto collider_aabb = std::dynamic_pointer_cast<AABBCollider>(aabb.collider);
 

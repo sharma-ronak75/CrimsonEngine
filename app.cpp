@@ -1,11 +1,14 @@
 #include "app.h"
 #include "crimson/header/collider.h"
+#include "crimson/header/component/collider.h"
 #include "crimson/header/component/meshrenderer.h"
 #include "crimson/header/component/rigidbody.h"
 #include "crimson/header/component/transform.h"
 #include "crimson/header/material.h"
 #include "crimson/header/mesh.h"
 #include "crimson/header/system.h"
+#include "crimson/header/window.h"
+#include <memory>
 
 void App::Initialize()
 {
@@ -38,15 +41,17 @@ void App::Initialize()
     plane = world_handler.add_entity();
     plane->add_component<Crimson::Transform>();
     plane->add_component<Crimson::MeshRenderer>();
+    plane->add_component<Crimson::Collider>();
+    plane->add_component<Crimson::Rigidbody>();
 
     plane->get_component<Crimson::Transform>().position.y = -10;
-    plane->get_component<Crimson::Transform>().rotation.x = 90;
-    plane->get_component<Crimson::Transform>().scale = glm::vec3(100);
+    plane->get_component<Crimson::Transform>().scale = glm::vec3(100, 1, 100);
+    plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_cube();
     plane->get_component<Crimson::MeshRenderer>().material = Crimson::Primitive::create_lit_material();
-    plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("ftint", glm::vec3(1.0, 0.8, 0.7));
-    plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_plane();
+    plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1.0, 0.8, 0.7));
+    plane->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
 
-    create_ball();
+    // create_ball();
 }
 
 void App::create_ball()
@@ -59,7 +64,9 @@ void App::create_ball()
     entity = world_handler.add_entity();
     entity->add_component<Crimson::Transform>();
     entity->add_component<Crimson::MeshRenderer>();
-    entity->get_component<Crimson::Transform>().position = glm::vec3(-1.5f, 0, 0.7);
+    entity->get_component<Crimson::Transform>().position =
+        glm::vec3(-1.5f, 0, 0.7) +
+        glm::vec3((rand() % 10) * 0.1F, (rand() % 10) * 0.1F, (rand() % 10) * 0.1F);
     entity->get_component<Crimson::MeshRenderer>().mesh = mesh;
     entity->get_component<Crimson::MeshRenderer>().material = material;
 
@@ -73,7 +80,17 @@ void App::Update()
     if(camera_entity != nullptr) control(*camera_entity);
     world_handler.tick_preframe(deltaTime);
 
-    // for(auto& entity: world_handler.get_entities())
+    for(auto& entity: world_handler.get_entity_list())
+    {
+        if(!entity->has_component<Crimson::Rigidbody>()) continue;
+        if(!entity->has_component<Crimson::Transform>()) continue;
+        if(!entity->has_component<Crimson::Collider>()) continue;
+        if(entity == plane) continue;
+
+        entity->get_component<Crimson::Rigidbody>().acceleration.y -= 10.0F;
+    }
+
+    // if(Crimson::Window::get_tick() % 120 == 0) create_ball();
 }
 
 void App::Render()
@@ -81,6 +98,7 @@ void App::Render()
     Crimson::Renderer::clear(Crimson::Color::BLACK);
     world_handler.tick_postframe();
 }
+
 
 void App::Destruct() {}
 
