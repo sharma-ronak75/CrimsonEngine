@@ -53,7 +53,7 @@ namespace Crimson::Physics
         }
         if(first.collider->type() == "AABBCollider" && second.collider->type() == "SphereCollider")
         {
-            return Crimson::Physics::Resolve::sphere_aabb(second, first, mro);
+            return Crimson::Physics::Resolve::sphere_aabb(second, first, mro.swap()).swap();
         }
         else throw std::invalid_argument(std::format(
             "collision resolution not defined for first={} second={}",

@@ -49,9 +49,10 @@ void App::Initialize()
     plane->get_component<Crimson::MeshRenderer>().mesh = Crimson::Primitive::create_cube();
     plane->get_component<Crimson::MeshRenderer>().material = Crimson::Primitive::create_lit_material();
     plane->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(1.0, 0.8, 0.7));
-    plane->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
+    plane->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(100, 1, 100);
+    plane->get_component<Crimson::Rigidbody>().is_static = true;
 
-    // create_ball();
+    create_ball();
 }
 
 void App::create_ball()

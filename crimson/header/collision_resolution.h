@@ -10,5 +10,6 @@ namespace Crimson::Physics
         Crimson::Transform second;
         
         void apply(Crimson::Transform& first, Crimson::Transform& second) const noexcept;
+        CollisionResolution swap() const noexcept;
     };
 }

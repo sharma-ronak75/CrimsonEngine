@@ -40,9 +40,12 @@ namespace Crimson::Physics
         float mass{1.0F};
     };
 
-    struct MassRatioOverride
+    class MassRatioOverride
     {
+    public:
         float f1{std::nanf("")};
         float f2{std::nanf("")};
+
+        inline MassRatioOverride swap() const noexcept { return MassRatioOverride{f2, f1}; }
     };
 }

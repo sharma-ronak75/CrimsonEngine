@@ -8,4 +8,9 @@ namespace Crimson::Physics
         first = this->first;
         second = this->second;
     }
+
+    CollisionResolution CollisionResolution::swap() const noexcept
+    {
+        return CollisionResolution{second, first};
+    }
 }
