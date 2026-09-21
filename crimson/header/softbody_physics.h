@@ -5,7 +5,7 @@
 #include <vector>
 namespace Crimson::SoftbodyPhysics
 {
-    constexpr size_t UndefinedNode = -1zu;
+    const size_t UndefinedNode = -1;
 
     class Node
     {
