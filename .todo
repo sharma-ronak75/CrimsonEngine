@@ -1,5 +1,6 @@
 > If aspectratio is too large or camera FOV is too large or near plane > 10 Enviroment doesn't render properly
 # Physics
+* Add softbody physics
+* Optimize physics (both rigidbody and softbody)
 
-
-# Build System: Make path non relative when launching build from any locations
+# Build System: Make path non relative when launching build file from any location

@@ -11,13 +11,13 @@ namespace Crimson
     {
     private:
         glm::vec3 last_position{RIGIDBODY_VELOCITY_UNDEFINED};
-        float current_friction_cofficient{1.0F};
     public:
         glm::vec3 acceleration{};
         float mass{1.0F};
         bool is_static{false};
         float ambient_friction_coefficient{1.0F};
         float sliding_friction_coefficient{1.0F};
+        float current_friction_cofficient{1.0F};
         
         Rigidbody() = default;
         void tick(Transform& transform, float delta_time) noexcept;

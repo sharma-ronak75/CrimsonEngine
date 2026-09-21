@@ -222,11 +222,13 @@ namespace Crimson
         for(auto& entity: rigid_entities)
         {
             entity->get_component<Rigidbody>().tick(entity->get_component<Transform>(), delta_time);
+            entity->get_component<Rigidbody>().current_friction_cofficient = 1.0F;
         }
         
         for(int i = 0; i < rigid_entities.size(); i ++)
         {
             auto entity1 = rigid_entities[i];
+            entity1->get_component<Crimson::Rigidbody>().current_friction_cofficient *= entity1->get_component<Crimson::Rigidbody>().ambient_friction_coefficient;
             for(int j = i + 1; j < rigid_entities.size(); j ++)
             {
                 auto entity2 = rigid_entities[j];
@@ -246,8 +248,14 @@ namespace Crimson
                 Physics::MassRatioOverride mro{};
                 if(entity1->get_component<Rigidbody>().is_static) mro = {0.0, 1.0F};
                 else if(entity2->get_component<Rigidbody>().is_static) mro = {1.0, 0.0F};
-                
+
                 Crimson::Physics::CollisionResolution res = Physics::resolve(collider1, collider2, mro);
+                if(!res.similar_to(entity1->get_component<Transform>(), entity2->get_component<Transform>()))
+                {
+                    entity1->get_component<Crimson::Rigidbody>().current_friction_cofficient *= entity2->get_component<Crimson::Rigidbody>().sliding_friction_coefficient;
+                    entity2->get_component<Crimson::Rigidbody>().current_friction_cofficient *= entity1->get_component<Crimson::Rigidbody>().sliding_friction_coefficient;
+                }
+
                 res.apply(entity1->get_component<Crimson::Transform>(), entity2->get_component<Crimson::Transform>());
             }
         }
