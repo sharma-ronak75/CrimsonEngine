@@ -11,5 +11,6 @@ namespace Crimson::Physics
         
         void apply(Crimson::Transform& first, Crimson::Transform& second) const noexcept;
         CollisionResolution swap() const noexcept;
+        bool similar_to(Crimson::Transform& first, Crimson::Transform& second) const noexcept;
     };
 }

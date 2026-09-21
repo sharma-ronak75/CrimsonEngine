@@ -52,16 +52,45 @@ void App::Initialize()
         plane->get_component<Crimson::Rigidbody>().is_static = true;
         return plane;
     };
+
+    const float S = 10.0F;
     
     auto ground = create_plane();
     ground->get_component<Crimson::Transform>().position.y = -10;
-    ground->get_component<Crimson::Transform>().scale = glm::vec3(100, 1, 100);
-    ground->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(100, 1, 100);
+    ground->get_component<Crimson::Transform>().scale = glm::vec3(S, 1, S);
+    ground->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(S, 1, S);
+
+    auto wall1 = create_plane();
+    wall1->get_component<Crimson::Transform>().position = glm::vec3(0, -20, S);
+    wall1->get_component<Crimson::Transform>().scale = glm::vec3(S, 10, 1);
+    wall1->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(S, 10, 1);
+    wall1->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(0.7, 1.0, 0.8));    
+
+    auto wall2 = create_plane();
+    wall2->get_component<Crimson::Transform>().position = glm::vec3(0, -20, -S);
+    wall2->get_component<Crimson::Transform>().scale = glm::vec3(S, 10, 1);
+    wall2->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(S, 10, 1);
+    wall2->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(0.7, 1.0, 0.8));    
+
+    auto wall3 = create_plane();
+    wall3->get_component<Crimson::Transform>().position = glm::vec3(-S, -20, 0);
+    wall3->get_component<Crimson::Transform>().scale = glm::vec3(1, 10, S);
+    wall3->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(1, 10, S);
+    wall3->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(0.7, 1.0, 0.8));    
+
+    auto wall4 = create_plane();
+    wall4->get_component<Crimson::Transform>().position = glm::vec3(S, -20, 0);
+    wall4->get_component<Crimson::Transform>().scale = glm::vec3(1, 10, S);
+    wall4->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>(1, 10, S);
+    wall4->get_component<Crimson::MeshRenderer>().material.set_shader_attribute("utint", glm::vec3(0.7, 1.0, 0.8));
 }
 
 void App::create_ball()
 {
-    auto mesh = Crimson::Primitive::create_sphere();
+    std::shared_ptr<Crimson::Mesh> mesh = nullptr;
+    int cube_or_sphere = rand() & 1;
+    if(cube_or_sphere == 0) mesh = Crimson::Primitive::create_cube();
+    else mesh = Crimson::Primitive::create_sphere();
     Crimson::Material material = Crimson::Primitive::create_lit_material();
 
     std::shared_ptr<Crimson::Entity> entity;
@@ -77,7 +106,9 @@ void App::create_ball()
 
     entity->add_component<Crimson::Rigidbody>();
     entity->add_component<Crimson::Collider>();
-    entity->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
+    if(cube_or_sphere == 0) entity->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::AABBCollider>();
+    else entity->get_component<Crimson::Collider>().collider = std::make_shared<Crimson::Physics::SphereCollider>();
+    entity->get_component<Crimson::Rigidbody>().acceleration.y -= 400;
 }
 
 void App::Update()
@@ -95,7 +126,7 @@ void App::Update()
         entity->get_component<Crimson::Rigidbody>().acceleration.y -= 10.0F;
     }
 
-    if(Crimson::Window::get_tick() % 120 == 0) create_ball();
+    if(Crimson::Window::get_tick() % 20 == 0) create_ball();
 }
 
 void App::Render()

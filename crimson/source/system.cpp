@@ -202,6 +202,11 @@ namespace Crimson
 
     void PhysicsSystem::tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time)
     {
+        physics_step(entities, delta_time);
+    }
+
+    void PhysicsSystem::physics_step(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) const
+    {
         std::vector<std::shared_ptr<Entity>> rigid_entities;
 
         for(auto& entity: entities)
@@ -221,10 +226,12 @@ namespace Crimson
         
         for(int i = 0; i < rigid_entities.size(); i ++)
         {
+            auto entity1 = rigid_entities[i];
             for(int j = i + 1; j < rigid_entities.size(); j ++)
             {
-                auto entity1 = rigid_entities[i];
                 auto entity2 = rigid_entities[j];
+                if(entity1->get_component<Rigidbody>().is_static && entity2->get_component<Rigidbody>().is_static) continue;
+
                 Physics::PhysicsCollider collider1 = {
                 entity1->get_component<Transform>(),
                     entity1->get_component<Collider>().collider,

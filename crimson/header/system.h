@@ -61,10 +61,10 @@ namespace Crimson
     {
     private:
     public:
-
         virtual void initialize() override {}
         void tick_preframe(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) override;
         void tick_postframe(std::vector<std::shared_ptr<Entity>>& entities) override {};
+        void physics_step(std::vector<std::shared_ptr<Entity>>& entities, float delta_time) const;
 
         virtual std::string type() const noexcept override { return "PhysicsSystem"; }
     };
