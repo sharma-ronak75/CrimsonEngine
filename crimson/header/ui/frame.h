@@ -7,6 +7,12 @@
 #include <vector>
 namespace Crimson::UI
 {
+    struct FrameBounds
+    {
+        glm::ivec2 position;
+        glm::ivec2 scale;
+    };
+
     class Frame
     {
     private:
@@ -30,6 +36,8 @@ namespace Crimson::UI
         bool is_keypressed() const noexcept;
         bool is_mouseenter() const noexcept;
         bool is_mouseexit() const noexcept;
+
+        FrameBounds get_bounds() const noexcept;
     };
 
     class Button: public Frame
