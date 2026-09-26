@@ -1,5 +1,4 @@
-#include "FreeType/ft2build.h"
-#include FT_FREETYPE_H
+
 #include "app.h"
 
 GLFWwindow* window;
